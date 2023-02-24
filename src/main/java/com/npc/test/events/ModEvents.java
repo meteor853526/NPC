@@ -2,6 +2,8 @@ package com.npc.test.events;
 
 import com.npc.test.NpcTestMod;
 import com.npc.test.commands.NpcMoveCommand;
+//import com.npc.test.commands.ReturnHomeCommand;
+//import com.npc.test.commands.SetHomeCommand;
 import com.npc.test.commands.ReturnHomeCommand;
 import com.npc.test.commands.SetHomeCommand;
 import net.minecraftforge.event.RegisterCommandsEvent;
