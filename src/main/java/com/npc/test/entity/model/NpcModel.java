@@ -21,5 +21,4 @@ public class NpcModel <T extends NpcEntity> extends VillagerModel<T> {
     }
 
 
-
 }

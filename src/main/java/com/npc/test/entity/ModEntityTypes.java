@@ -16,7 +16,7 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<NpcEntity>> NPC =
             ENTITY_TYPES.register("npc",
-                    () -> EntityType.Builder.of((EntityType.IFactory<NpcEntity>) NpcEntity::new,EntityClassification.CREATURE).sized(1f, 3f)
+                    () -> EntityType.Builder.<NpcEntity>of(NpcEntity::new, EntityClassification.CREATURE).sized(1f, 1f)
                             .build(new ResourceLocation(NpcTestMod.MOD_ID, "npc").toString()));
 
 

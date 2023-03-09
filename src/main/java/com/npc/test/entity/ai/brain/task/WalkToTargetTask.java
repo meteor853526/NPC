@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static net.minecraft.entity.ai.brain.memory.MemoryModuleType.WALK_TARGET;
 
-public class WalkToTargetTask extends Task<NpcEntity> {
+public class WalkToTargetTask extends Task<MobEntity> {
    private int remainingCooldown;
    @Nullable
    private Path path;
@@ -39,7 +39,7 @@ public class WalkToTargetTask extends Task<NpcEntity> {
       super(ImmutableMap.of(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleStatus.REGISTERED, MemoryModuleType.PATH, MemoryModuleStatus.VALUE_ABSENT, WALK_TARGET, MemoryModuleStatus.VALUE_PRESENT), p_i241908_1_, p_i241908_2_);
    }
 
-   protected boolean checkExtraStartConditions(ServerWorld worldIn, NpcEntity owner) {
+   protected boolean checkExtraStartConditions(ServerWorld worldIn, MobEntity owner) {
       if (this.remainingCooldown > 0) {
          --this.remainingCooldown;
          return false;
@@ -61,7 +61,8 @@ public class WalkToTargetTask extends Task<NpcEntity> {
       }
    }
 
-   protected boolean canStillUse(ServerWorld worldIn, NpcEntity entityIn, long gameTimeIn) {
+   protected boolean canStillUse(ServerWorld worldIn, MobEntity entityIn, long gameTimeIn) {
+
       if (this.path != null && this.lastTargetPos != null) {
          Optional<WalkTarget> optional = entityIn.getBrain().getMemory(WALK_TARGET);
          PathNavigator pathnavigator = entityIn.getNavigation();
@@ -71,7 +72,7 @@ public class WalkToTargetTask extends Task<NpcEntity> {
       }
    }
 
-   protected void stop(ServerWorld worldIn, NpcEntity entityIn, long gameTimeIn) {
+   protected void stop(ServerWorld worldIn, MobEntity entityIn, long gameTimeIn) {
       if (entityIn.getBrain().hasMemoryValue(WALK_TARGET) && !this.reachedTarget(entityIn, entityIn.getBrain().getMemory(WALK_TARGET).get()) && entityIn.getNavigation().isStuck()) {
          this.remainingCooldown = worldIn.getRandom().nextInt(40);
       }
@@ -82,20 +83,27 @@ public class WalkToTargetTask extends Task<NpcEntity> {
       this.path = null;
    }
 
-   protected void start(ServerWorld worldIn, NpcEntity entityIn, long gameTimeIn) {
+   protected void start(ServerWorld worldIn, MobEntity entityIn, long gameTimeIn) {
+
       entityIn.getBrain().setMemory(MemoryModuleType.PATH, this.path);
       entityIn.getNavigation().moveTo(this.path, (double)this.speedModifier);
    }
 
-   public void set(NpcEntity entityIn, Vector3d pos){
-      entityIn.getBrain().setMemory(WALK_TARGET, new WalkTarget(pos, 120, 120));
-   }
+//   public void set(MobEntity entityIn, Vector3d pos){
+//      entityIn.getBrain().setMemory(WALK_TARGET, new WalkTarget(pos, 120, 120));
+//   }
 
-   protected void tick(ServerWorld worldIn, NpcEntity owner, long gameTime) {
+   protected void tick(ServerWorld worldIn, MobEntity owner, long gameTime) {
       Path path = owner.getNavigation().getPath();
       Brain<?> brain = owner.getBrain();
+
+      if (NpcEntity.pos != null) {
+
+         this.lastTargetPos = NpcEntity.pos;
+      }
       if (this.path != path) {
          this.path = path;
+
          brain.setMemory(MemoryModuleType.PATH, path);
       }
 

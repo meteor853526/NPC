@@ -11,51 +11,60 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPosWrapper;
 import net.minecraft.world.server.ServerWorld;
 
+import java.util.Map;
+
 public abstract class MaidMoveToBlockTask extends MaidCheckRateTask {
-    private static final int MAX_DELAY_TIME = 120;
-    private final float movementSpeed;
-    private final int searchRange;
-    private final int verticalSearchRange;
-    protected int verticalSearchStart;
-
-    public MaidMoveToBlockTask(float movementSpeed, int searchRange) {
-        this(movementSpeed, searchRange, 1);
+    public MaidMoveToBlockTask(Map<MemoryModuleType<?>, MemoryModuleStatus> requiredMemoryStateIn) {
+        super(requiredMemoryStateIn);
     }
-
-    public MaidMoveToBlockTask(float movementSpeed, int searchRange, int verticalSearchRange) {
-        super(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleStatus.VALUE_ABSENT,
-                InitEntities.TARGET_POS.get(), MemoryModuleStatus.VALUE_ABSENT));
-        this.movementSpeed = movementSpeed;
-        this.searchRange = searchRange;
-        this.verticalSearchRange = verticalSearchRange;
-        this.setMaxCheckRate(MAX_DELAY_TIME);
-    }
-
-    protected final void searchForDestination(ServerWorld worldIn, NpcEntity npc) {
-        BlockPos blockpos = npc.blockPosition();
-        BlockPos.Mutable blockPos = new BlockPos.Mutable();
-        for (int y = this.verticalSearchStart; y <= this.verticalSearchRange; y = y > 0 ? -y : 1 - y) {
-            for (int i = 0; i < this.searchRange; ++i) {
-                for (int x = 0; x <= i; x = x > 0 ? -x : 1 - x) {
-                    for (int z = x < i && x > -i ? i : 0; z <= i; z = z > 0 ? -z : 1 - z) {
-                        blockPos.setWithOffset(blockpos, x, y - 1, z);
-                        if (npc.isWithinRestriction(blockPos) && shouldMoveTo(worldIn, npc, blockPos) && checkPathReach(npc, blockPos)) {
-                            BrainUtil.setWalkAndLookTargetMemories(npc, blockPos, this.movementSpeed, 0);
-                            npc.getBrain().setMemory(InitEntities.TARGET_POS.get(), new BlockPosWrapper(blockPos));
-                            this.setNextCheckTickCount(5);
-
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    protected abstract boolean shouldMoveTo(ServerWorld worldIn, NpcEntity entityIn, BlockPos pos);
-
-    protected boolean checkPathReach(NpcEntity npc, BlockPos pos) {
-        return npc.canPathReach(pos);
-    }
+//    private static final int MAX_DELAY_TIME = 120;
+//    private final float movementSpeed;
+//    private final int searchRange;
+//    private final int verticalSearchRange;
+//    protected int verticalSearchStart;
+//
+//    public MaidMoveToBlockTask(float movementSpeed, int searchRange) {
+//        this(movementSpeed, searchRange, 1);
+//    }
+//
+//    public MaidMoveToBlockTask(float movementSpeed, int searchRange, int verticalSearchRange) {
+//        super(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleStatus.VALUE_ABSENT,
+//                InitEntities.TARGET_POS.get(), MemoryModuleStatus.VALUE_ABSENT));
+//        this.movementSpeed = movementSpeed;
+//        this.searchRange = searchRange;
+//        this.verticalSearchRange = verticalSearchRange;
+//        this.setMaxCheckRate(MAX_DELAY_TIME);
+//    }
+//
+//
+//    protected final void searchForDestination(ServerWorld worldIn, NpcEntity npc,BlockPos pos) {
+//        BlockPos blockpos = npc.blockPosition();
+//        BlockPos.Mutable blockPos = new BlockPos.Mutable();
+//
+//        for (int y = this.verticalSearchStart; y <= this.verticalSearchRange; y = y > 0 ? -y : 1 - y) {
+//            for (int i = 0; i < this.searchRange; ++i) {
+//                for (int x = 0; x <= i; x = x > 0 ? -x : 1 - x) {
+//                    for (int z = x < i && x > -i ? i : 0; z <= i; z = z > 0 ? -z : 1 - z) {
+//                        blockPos.setWithOffset(pos, x, y -1, z);
+//                        if (npc.isWithinRestriction(blockPos) && shouldMoveTo(worldIn, npc, blockPos) && checkPathReach(npc, blockPos)) {
+//                            BrainUtil.setWalkAndLookTargetMemories(npc, blockPos, this.movementSpeed, 0);
+//                            npc.getBrain().setMemory(InitEntities.TARGET_POS.get(), new BlockPosWrapper(blockPos));
+//                            this.setNextCheckTickCount(5);
+//
+//                            return;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//
+//    protected abstract void start(ServerWorld worldIn, NpcEntity npc, long gameTimeIn, BlockPos pos);
+//
+//    protected abstract boolean shouldMoveTo(ServerWorld worldIn, NpcEntity entityIn, BlockPos pos);
+//
+//    protected boolean checkPathReach(NpcEntity npc, BlockPos pos) {
+//        return npc.canPathReach(pos);
+//    }
 }

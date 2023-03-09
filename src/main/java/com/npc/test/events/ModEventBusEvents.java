@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ModEventBusEvents {
     @SubscribeEvent
     public static void addEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(ModEntityTypes.NPC.get(), NpcEntity.createAttributes().build());
+        event.put(ModEntityTypes.NPC.get(), NpcEntity.setCustomAttributes().build());
 
     }
 

@@ -11,10 +11,10 @@ import net.minecraft.client.renderer.entity.model.VillagerModel;
 public class NpcRenderer extends MobRenderer<NpcEntity, NpcModel<NpcEntity>>
 {
     protected static final ResourceLocation TEXTURE =
-            new ResourceLocation(NpcTestMod.MOD_ID, "textures/entity/pigeon.png");
+            new ResourceLocation(NpcTestMod.MOD_ID, "textures/entity/entity_villager_farmer_png.png");
 
     public NpcRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new NpcModel<>(0.1F), 0.2F);
+        super(renderManagerIn, new NpcModel<>(1F), 0.5F);
     }
 
     @Override

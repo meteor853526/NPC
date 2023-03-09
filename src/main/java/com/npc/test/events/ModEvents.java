@@ -22,6 +22,7 @@ public class ModEvents {
         new SetHomeCommand(event.getDispatcher());
         new ReturnHomeCommand(event.getDispatcher());
         new NpcMoveCommand(event.getDispatcher());
+
         ConfigCommand.register(event.getDispatcher());
     }
 
