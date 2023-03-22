@@ -25,6 +25,7 @@ import net.minecraftforge.server.command.ConfigCommand;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -67,9 +68,11 @@ public class PlayerChatEvent {
 
 
     @SubscribeEvent
-    public String getd(ClientChatEvent event) {
+    public String getd(ClientChatEvent event) throws SQLException {
         System.out.println(event);
         String msg = event.getMessage();
+
+
 
 //        String str = msg ;
 //        String regex ="[-]?\\d*";
@@ -100,6 +103,9 @@ public class PlayerChatEvent {
                     NpcEntity.msg = "";
                     System.out.println(response);
                     NpcEntity.replay = response;
+
+                    MySQLExample sqlExample = new MySQLExample();
+                    sqlExample.IntoDB(1,response);
 
                     String str = msg ;
                     String regex ="[-]?\\d*";
