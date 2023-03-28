@@ -19,7 +19,7 @@ public class RequestHandler {
     public String apiKey = "";
     public String model = "text-davinci-003";
     public float temperature = 0.6f;
-    private static class OpenAIRequest {
+    private class OpenAIRequest {
         String model = "text-davinci-002";
         String stop = "\"";
         String prompt = "hi";
@@ -36,14 +36,14 @@ public class RequestHandler {
         }
     }
 
-    private static class OpenAIResponse {
-        static class Choice {
+    private class OpenAIResponse {
+        class Choice {
             String text;
         }
         Choice[] choices;
     }
 
-    public static String getAIResponse(String prompt) throws IOException {
+    public String getAIResponse(String prompt) throws IOException {
         if (prompt.length() > 4096) prompt = prompt.substring(prompt.length() - 4096);
         //AIMobsMod.LOGGER.info("Prompt: " + prompt);
 

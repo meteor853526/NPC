@@ -72,6 +72,7 @@ public class PlayerChatEvent {
         System.out.println(event);
         String msg = event.getMessage();
 
+        RequestHandler requestHandler = new RequestHandler();
 
 
 //        String str = msg ;
@@ -99,7 +100,7 @@ public class PlayerChatEvent {
             lastRequest = System.currentTimeMillis();
             Thread t = new Thread(() -> {
                 try {
-                    String response = RequestHandler.getAIResponse(msg);
+                    String response = requestHandler.getAIResponse(msg);
                     NpcEntity.msg = "";
                     System.out.println(response);
                     NpcEntity.replay = response;
