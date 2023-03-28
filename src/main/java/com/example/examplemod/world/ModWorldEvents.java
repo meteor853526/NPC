@@ -23,6 +23,7 @@ import com.example.examplemod.world.gen.ModTreeGeneration;
 import com.example.examplemod.world.structure.ModStructures;
 import org.apache.logging.log4j.LogManager;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,10 +67,25 @@ public class ModWorldEvents {
 
             // Adding our Structure to the Map
             Map<Structure<?>, StructureSeparationSettings> tempMap =
-                    new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
+                    new HashMap<>(serverWorld.getChunkProvider().getChunkGenerator().func_235957_b_().func_236195_a_());
             tempMap.putIfAbsent(ModStructures.HORSEFARM.get(),
                     DimensionStructuresSettings.field_236191_b_.get(ModStructures.HORSEFARM.get()));
-            serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
+
+           serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
+//            serverWorld.getChunkProvider().getChunkGenerator().func_235957_b_().field_236193_d_ = tempMap;
+//            try {
+//                // Get the field object for the private field
+//                Field field = DimensionStructuresSettings.class.getDeclaredField("field_236193_d_");
+//
+//                // Make the private field accessible
+//                field.setAccessible(true);
+//
+//                // Set the value of the private field
+//                field.set(serverWorld.getChunkProvider().getChunkGenerator().func_235957_b_(), tempMap);
+//            } catch (Exception e) {
+//                // Handle any exceptions that occur
+//            }
+
         }
     }
 }
