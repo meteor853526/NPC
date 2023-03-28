@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "value": [
+    "minecraft:obsidian",
+    "minecraft:nethrrack",
+    "examplemod:firestone_block"
+  ]
+}

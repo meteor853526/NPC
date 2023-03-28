@@ -1,0 +1,9 @@
+{
+  "item.examplemod.amethyst": "Amethyst",
+  "block.exapmlemod.amethyst_ore": "Amethyst Ore",
+  "block.exapmlemod.amethyst_block": "Amethyst Block",
+  "block.exapmlemod.firestone_block": "Firestone Block",
+  "itemGroup.exampleModTab": "Example Mod",
+  "tooltip.examplemod.firestone": "Hold \u00A7eSHIFT\u00A7r for more Information!",
+  "tooltip.examplemod.firestone_shift": "Might set you on fire. But also might protect from it!"
+}
