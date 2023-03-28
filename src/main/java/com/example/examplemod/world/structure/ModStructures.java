@@ -40,13 +40,31 @@ public class ModStructures {
                     .addAll(Structure.field_236384_t_)
                     .add(structure)
                     .build();
+//            ImmutableList<Structure<?>> newStructures = ImmutableList.<Structure<?>>builder()
+//                    .addAll(Structure.field_236384_t_)
+//                    .add(structure)
+//                    .build();
+
         }
+
 
         DimensionStructuresSettings.field_236191_b_ =
                 ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
                         .putAll(DimensionStructuresSettings.field_236191_b_)
                         .put(structure, structureSeparationSettings)
                         .build();
+//        ImmutableMap<Structure<?>, StructureSeparationSettings> newMap =
+//                ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
+//                        .putAll(DimensionStructuresSettings.field_236191_b_)
+//                        .put(structure, structureSeparationSettings)
+//                        .build();
+
+
+//        DimensionStructuresSettings.field_236191_b_ =
+//                ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
+//                        .putAll(DimensionStructuresSettings.field_236191_b_)
+//                        .put(structure, structureSeparationSettings)
+//                        .build();
 
         WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
             Map<Structure<?>, StructureSeparationSettings> structureMap =
