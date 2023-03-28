@@ -38,7 +38,6 @@ public class ExampleMod
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
         ModStructures.register(eventBus);
-
         eventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
         eventBus.addListener(this::enqueueIMC);
@@ -61,6 +60,7 @@ public class ExampleMod
 
 
             ModStructures.setupStructures();
+//            ModConfiguredStructures.registerConfiguredStructures();
         });
     }
 
