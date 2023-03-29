@@ -27,6 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.ConfigCommand;
 
+import java.io.IOException;
 import java.util.concurrent.*;
 
 import java.io.FileWriter;
@@ -73,7 +74,7 @@ public class PlayerChatEvent {
 
     }
     @SubscribeEvent
-    public String getClientmsg(ServerChatEvent event) throws SQLException, ClassNotFoundException, ExecutionException, InterruptedException {
+    public String getClientmsg(ServerChatEvent event) throws SQLException, ClassNotFoundException, ExecutionException, InterruptedException, IOException {
         String msg = event.getMessage();
         System.out.println(event);
 
@@ -81,16 +82,49 @@ public class PlayerChatEvent {
 
         if(msg.charAt(0) == '#') {
             lastRequest = System.currentTimeMillis();
+            Thread t = new Thread(() -> {
+                try {
+                    MySQLExample sqlExample = new MySQLExample();
 
-            MySQLExample sqlExample = new MySQLExample();
+                    String response = RequestHandler.getAIResponse("你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"問題:"+ event.getMessage());
+                    //System.out.println("你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"問題:"+ msg);
+                    NpcEntity.msg = "";
+                    System.out.println(response);
+                    NpcEntity.replay = response;
+                    event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + response), event.getPlayer().getUUID());
+                    String regex ="[-]?\\d*";
+                    Pattern p = Pattern.compile(regex);
+
+                    Matcher m = p.matcher(msg);
+                    int[] arr = new int[3];
+                    //arr[0] = arr[1] = arr[2] = 0;
+                    int count = 0;
+                    while (m.find()) {
+                        if (!"".equals(m.group())){
+                            System.out.println("come here:"+ m.group());
+                            arr[count++] = Integer.parseInt(m.group());
+                        }
+                    }
+                    //System.out.println(arr);
+                    //if(arr[0] != 0 && arr[1] != 0 &&arr[2] != 0)
+                    NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            t.start();
+            //event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + NpcEntity.replay), event.getPlayer().getUUID());
 
 
-            Runnable task = new MyTask(1,"你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"問題:"+msg,event);
-            if(threadManager.getActCount() < 1 ){
-                threadManager.execute(task);
-            }else{
-                MyTask.followmsg = msg;
-            }
+
+
+            //Runnable task = new MyTask(1,"你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"問題:"+msg,event);
+//            if(threadManager.getActCount() < 1 ){
+//                threadManager.execute(task);
+//            }else{
+//                MyTask.followmsg = msg;
+//            }
 
 
 
@@ -104,7 +138,7 @@ public class PlayerChatEvent {
 //            });
 //            System.out.println(PlayerChatEvent.msg);
 //            if(Objects.equals(PlayerChatEvent.msg, ""))System.out.println("??????????????");
-//            event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: "+ PlayerChatEvent.msg),event.getPlayer().getUUID());
+            //event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: "+ PlayerChatEvent.msg),event.getPlayer().getUUID());
 
 //            String regex ="[-]?\\d*";
 //            Pattern p = Pattern.compile(regex);
