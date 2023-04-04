@@ -16,6 +16,7 @@ license="All rights reserved"
 [[mods]] #mandatory
 # The modid of the mod
 modId="npctestmod" #mandatory
+#modId="comicsbubbleschat" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 # ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
 # see the associated build.gradle script for how to populate this completely automatically during a build

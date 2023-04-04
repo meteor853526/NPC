@@ -189,8 +189,8 @@ public class NpcEntity<T> extends TameableEntity{
         Thread t = new Thread(() -> {
             try {
                 MySQLExample sqlExample = new MySQLExample();
-                String response = RequestHandler.getAIResponse("§A²{¦b¬O¤@­Óminecraft¸Ìªºnpc¡A®Ú¾Ú¥H¤Uªºvalue½Ð±Ô­z¥X³]©w"+sqlExample.getData()+"¨Ã±Ô­z¥X§Aªº¤Hª«");
-                p_230254_1_.sendMessage(new StringTextComponent(response),null);
+                //String response = RequestHandler.getAIResponse("ï¿½Aï¿½{ï¿½bï¿½Oï¿½@ï¿½ï¿½minecraftï¿½Ìªï¿½npcï¿½Aï¿½Ú¾Ú¥Hï¿½Uï¿½ï¿½valueï¿½Ð±Ô­zï¿½Xï¿½]ï¿½w"+sqlExample.getData()+"ï¿½Ã±Ô­zï¿½Xï¿½Aï¿½ï¿½ï¿½Hï¿½ï¿½");
+                //p_230254_1_.sendMessage(new StringTextComponent(response),null);
 
             } catch (Exception e) {
                 e.printStackTrace();

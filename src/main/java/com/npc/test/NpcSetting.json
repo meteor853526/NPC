@@ -1,0 +1,14 @@
+{
+  "Your name": "diedie",
+  "role": "farmer chief",
+  "personality": "Straightforward",
+  "init-Favorability": "0",
+  "Improve-Favorability": "interact with me",
+  "High-Favorability": "talking with",
+  "Low-Favorability": "stop to talking with",
+  "food price":{
+    "1 carrot ":"3金幣",
+    "1 wheat": "2金幣",
+    "1 beetroot": "5金幣"
+  }
+}

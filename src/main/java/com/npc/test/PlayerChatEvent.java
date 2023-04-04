@@ -13,6 +13,7 @@ import com.npc.test.passive.NpcEntity;
 import net.minecraft.client.util.JSONException;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.FileUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.event.ClientChatEvent;
@@ -27,17 +28,22 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.ConfigCommand;
 
-import java.io.IOException;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.*;
 
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
+
 
 @Mod.EventBusSubscriber(modid = NpcTestMod.MOD_ID)
 public class PlayerChatEvent {
@@ -46,6 +52,10 @@ public class PlayerChatEvent {
     public static String msg = "";
     public static String NpcData = null;
     public static long lastRequest = 0;
+    public static int count = 0;
+    public static String setting = "";
+
+    public static String chatRecord ="";
     public static ThreadManager threadManager = new ThreadManager(new ThreadPoolExecutor(10, 10, 10L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()));
     @SubscribeEvent
     public String getMsg(PlayerEvent event) {
@@ -78,48 +88,67 @@ public class PlayerChatEvent {
         String msg = event.getMessage();
         System.out.println(event);
 
+
+
         NpcEntity.msg = msg;
 
         if(msg.charAt(0) == '#') {
             lastRequest = System.currentTimeMillis();
-            Thread t = new Thread(() -> {
-                try {
-                    MySQLExample sqlExample = new MySQLExample();
+            File file = new File("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\NpcSetting.json");
+            String settingContent = FileUtils.readFileToString(file,"UTF-8");
+            setting = settingContent;
+            File chatfile = new File("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.json");
+            String chatContent = FileUtils.readFileToString(chatfile,"UTF-8");
+            chatRecord = chatContent;
+//            Thread t = new Thread(() -> {
+//                try {
+//
+//                    String response = RequestHandler.getAIResponse("You play as an npc in minecraft. Then is your setting " +chatContent+"And you don't need to repeat the setting.And this the record we chat before "+chatcontent +"My question: "+event.getMessage());
+//                    JSONObject chatjsonObject=new JSONObject(chatContent);
+//                    DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss z");
+//                    JSONObject temp=new JSONObject();
+//
+//                    temp.put("PlayerMessage",event.getMessage());
+//                    temp.put("GPT reply",response);
+//
+//                    String date = dateFormat.format(new Date());
+//                    chatjsonObject.put("Time("+date+")",temp);
+//
+//                    try {
+//                        FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.json");         // writing back to the file
+//                        fileWriter.write(chatjsonObject.toString());
+//                        fileWriter.flush();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    NpcEntity.msg = "";
+//                    System.out.println(response);
+//                    NpcEntity.replay = response;
+//                    event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + response), event.getPlayer().getUUID());
+//                    String regex ="[-]?\\d*";
+//                    Pattern p = Pattern.compile(regex);
+//                    Matcher m = p.matcher(msg);
+//                    int[] arr = new int[3];
+//                    //arr[0] = arr[1] = arr[2] = 0;
+//                    int count = 0;
+//                    while (m.find()) {
+//                        if (!"".equals(m.group())){
+//                            System.out.println("come here:"+ m.group());
+//                            arr[count++] = Integer.parseInt(m.group());
+//                        }
+//                    }
+//                    NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//            t.start();
+            threadManager.execute(new MyTask(count++,event,settingContent,chatContent));
 
-                    String response = RequestHandler.getAIResponse("你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"問題:"+ event.getMessage());
-                    //System.out.println("你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"問題:"+ msg);
-                    NpcEntity.msg = "";
-                    System.out.println(response);
-                    NpcEntity.replay = response;
-                    event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + response), event.getPlayer().getUUID());
-                    String regex ="[-]?\\d*";
-                    Pattern p = Pattern.compile(regex);
-
-                    Matcher m = p.matcher(msg);
-                    int[] arr = new int[3];
-                    //arr[0] = arr[1] = arr[2] = 0;
-                    int count = 0;
-                    while (m.find()) {
-                        if (!"".equals(m.group())){
-                            System.out.println("come here:"+ m.group());
-                            arr[count++] = Integer.parseInt(m.group());
-                        }
-                    }
-                    //System.out.println(arr);
-                    //if(arr[0] != 0 && arr[1] != 0 &&arr[2] != 0)
-                    NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            t.start();
-            //event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + NpcEntity.replay), event.getPlayer().getUUID());
 
 
-
-
-            //Runnable task = new MyTask(1,"你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"問題:"+msg,event);
 //            if(threadManager.getActCount() < 1 ){
 //                threadManager.execute(task);
 //            }else{
@@ -178,8 +207,7 @@ public class PlayerChatEvent {
 //                try {
 //                    MySQLExample sqlExample = new MySQLExample();
 //
-//                    String response = RequestHandler.getAIResponse("你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"問題:"+finalMsg);
-//                    System.out.println("你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"問題:"+finalMsg);
+
 //                    NpcEntity.msg = "";
 //                    System.out.println(response);
 //                    NpcEntity.replay = response;

@@ -2,22 +2,31 @@ package com.npc;
 
 import com.npc.test.PlayerChatEvent;
 import com.npc.test.RequestHandler;
+import com.npc.test.passive.NpcEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.ServerChatEvent;
+import org.json.JSONObject;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class MyTask implements Runnable {
     private int taskId;
-    private String message;
 
+    private String setting;
+    private String chatRecord;
     public static String followmsg = null;
     public ServerChatEvent event;
-    public MyTask(int taskId, String message,ServerChatEvent event) {
+    public MyTask(int taskId, ServerChatEvent event,String setting,String chatRecord) {
         this.taskId = taskId;
-        this.message = message;
+
         this.event = event;
+        this.setting = setting;
+        this.chatRecord = chatRecord;
     }
 
     public int getTaskId() {
@@ -28,13 +37,7 @@ public class MyTask implements Runnable {
         this.taskId = taskId;
     }
 
-    public String getMessage() {
-        return message;
-    }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public ServerChatEvent getEvent() {
         return event;
@@ -46,35 +49,43 @@ public class MyTask implements Runnable {
 
     public void run() {
         System.out.println("Task " + taskId + " is running on thread " + Thread.currentThread().getName());
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        while (true) {
-//            try {
-//                if(!Objects.equals(message, "")) {
-//                    String response = RequestHandler.getAIResponse(message);
-//                    PlayerChatEvent.msg = response;
-//                    System.out.println(response);
-//                    this.event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + PlayerChatEvent.msg), event.getPlayer().getUUID());
-//
-//                    message = "";
-//                }else if(!Objects.equals(followmsg, "")){
-//                    String response = RequestHandler.getAIResponse(followmsg);
-//                    PlayerChatEvent.msg = response;
-//                    System.out.println(response);
-//                    this.event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + response), event.getPlayer().getUUID());
-//                    followmsg = "";
-//
-//                }
-//                Thread.sleep(10000);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-        //System.out.println("Task " + taskId + " has completed");
+
+            try {
+                while (true) {
+
+                    if (!Objects.equals(setting, "") && !Objects.equals(chatRecord, "")) {
+                        String response = RequestHandler.getAIResponse("You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! . Then is your character setting " + setting + "And this the record we talked before " + chatRecord + "If record show nothing which mean this is the first time we met .There is the current message: " + event.getMessage());
+                        System.out.println("You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! . Then is your character setting " + setting + "And this the record we talked before " + chatRecord + "If record show nothing which mean this is the first time we met .There is the current message: " + event.getMessage());
+                        JSONObject chatjsonObject = new JSONObject(PlayerChatEvent.chatRecord);
+                        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss z");
+                        JSONObject temp = new JSONObject();
+
+                        temp.put("Player's message", event.getMessage());
+                        temp.put("you", response);
+
+                        String date = dateFormat.format(new Date());
+                        chatjsonObject.put("chat flow(" + taskId + ")", temp);
+
+                        try {
+                            FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.json");         // writing back to the file
+                            fileWriter.write(chatjsonObject.toString());
+                            fileWriter.flush();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        NpcEntity.msg = "";
+                        System.out.println(response);
+                        NpcEntity.replay = response;
+                        event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + response), event.getPlayer().getUUID());
+
+                        break;
+                    }
+                }
+                Thread.sleep(1000);
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+
     }
 }

@@ -21,10 +21,10 @@ public class RequestHandler {
     public String model = "text-davinci-003";
     public float temperature = 0.6f;
     private static class OpenAIRequest {
-        String model = "text-davinci-002";
+        String model = "text-davinci-003";
         String stop = "\"";
         String prompt = "hi";
-        float temperature = 0.6f;
+        float temperature = 0.9f;
         int max_tokens = 64;
 
         OpenAIRequest(String prompt) {
@@ -48,14 +48,14 @@ public class RequestHandler {
         if (prompt.length() > 4096) prompt = prompt.substring(prompt.length() - 4096);
         //AIMobsMod.LOGGER.info("Prompt: " + prompt);
 
-        OpenAIRequest openAIRequest = new OpenAIRequest(prompt, "text-davinci-003", 0.6f);
+        OpenAIRequest openAIRequest = new OpenAIRequest(prompt, "text-davinci-003", 0.9f);
         String data = new Gson().toJson(openAIRequest);
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpPost request = new HttpPost("https://api.openai.com/v1/completions");
             StringEntity params = new StringEntity(data, "UTF-8");
             request.addHeader("Content-Type", "application/json");
-            request.addHeader("Authorization", "Bearer " + "");
+            request.addHeader("Authorization", "Bearer " + "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");
             request.setEntity(params);
             HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();
