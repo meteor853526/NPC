@@ -2,6 +2,10 @@ package com.npc.test;
 
 
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.systems.IRenderCall;
+import com.npc.MyTask;
+import com.npc.ThreadManager;
+import com.npc.ThreadManagerExample;
 import com.npc.test.commands.NpcMoveCommand;
 import com.npc.test.commands.ReturnHomeCommand;
 import com.npc.test.commands.SetHomeCommand;
@@ -14,6 +18,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -22,12 +27,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.ConfigCommand;
 
+import java.io.IOException;
+import java.util.concurrent.*;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +44,9 @@ public class PlayerChatEvent {
 
 
     public static String msg = "";
+    public static String NpcData = null;
     public static long lastRequest = 0;
+    public static ThreadManager threadManager = new ThreadManager(new ThreadPoolExecutor(10, 10, 10L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()));
     @SubscribeEvent
     public String getMsg(PlayerEvent event) {
         ItemStack item = event.getPlayer().getMainHandItem();
@@ -63,63 +73,35 @@ public class PlayerChatEvent {
         }
 
     }
-
-
-
-
     @SubscribeEvent
-    public String getd(ClientChatEvent event) throws SQLException {
-        System.out.println(event);
+    public String getClientmsg(ServerChatEvent event) throws SQLException, ClassNotFoundException, ExecutionException, InterruptedException, IOException {
         String msg = event.getMessage();
-
-        RequestHandler requestHandler = new RequestHandler();
-
-
-//        String str = msg ;
-//        String regex ="[-]?\\d*";
-//        Pattern p = Pattern.compile(regex);
-//
-//        Matcher m = p.matcher(str);
-//        int[] arr = new int[3];
-//        //arr[0] = arr[1] = arr[2] = 0;
-//        int count = 0;
-//        while (m.find()) {
-//            if (!"".equals(m.group())){
-//                System.out.println("come here:"+ m.group());
-//                arr[count++] = Integer.valueOf(m.group());
-//            }
-//        }
-//        //System.out.println(arr);
-//        //if(arr[0] != 0 && arr[1] != 0 &&arr[2] != 0)
-//        NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
-
+        System.out.println(event);
 
         NpcEntity.msg = msg;
 
-        if(NpcEntity.msg != "") {
+        if(msg.charAt(0) == '#') {
             lastRequest = System.currentTimeMillis();
             Thread t = new Thread(() -> {
                 try {
-                    String response = requestHandler.getAIResponse(msg);
+                    MySQLExample sqlExample = new MySQLExample();
+
+                    String response = RequestHandler.getAIResponse("Now you are an npc in Minecraft，according the value to describe the setting"+sqlExample.getData()+"question:"+ event.getMessage());
                     NpcEntity.msg = "";
                     System.out.println(response);
                     NpcEntity.replay = response;
-
-                    MySQLExample sqlExample = new MySQLExample();
-                    sqlExample.IntoDB(1,response);
-
-                    String str = msg ;
+                    event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + response), event.getPlayer().getUUID());
                     String regex ="[-]?\\d*";
                     Pattern p = Pattern.compile(regex);
 
-                    Matcher m = p.matcher(str);
+                    Matcher m = p.matcher(msg);
                     int[] arr = new int[3];
                     //arr[0] = arr[1] = arr[2] = 0;
                     int count = 0;
                     while (m.find()) {
                         if (!"".equals(m.group())){
                             System.out.println("come here:"+ m.group());
-                            arr[count++] = Integer.valueOf(m.group());
+                            arr[count++] = Integer.parseInt(m.group());
                         }
                     }
                     //System.out.println(arr);
@@ -131,62 +113,113 @@ public class PlayerChatEvent {
                 }
             });
             t.start();
+            //event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + NpcEntity.replay), event.getPlayer().getUUID());
+
+
+
+
+ //            if(threadManager.getActCount() < 1 ){
+//                threadManager.execute(task);
+//            }else{
+//                MyTask.followmsg = msg;
+//            }
+
+
+
+
+
+//            CompletableFuture<Boolean> future1 = CompletableFuture.supplyAsync(() -> {
+//                while(true){
+//                    if(!Objects.equals(PlayerChatEvent.msg, ""))break;
+//                }
+//               return true;
+//            });
+//            System.out.println(PlayerChatEvent.msg);
+//            if(Objects.equals(PlayerChatEvent.msg, ""))System.out.println("??????????????");
+            //event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: "+ PlayerChatEvent.msg),event.getPlayer().getUUID());
+
+//            String regex ="[-]?\\d*";
+//            Pattern p = Pattern.compile(regex);
+//            Matcher m = p.matcher(PlayerChatEvent.msg);
+//            int[] arr = new int[3];
+//            //arr[0] = arr[1] = arr[2] = 0;
+//            int count = 0;
+//            while (m.find()) {
+//                if (!"".equals(m.group())){
+//                    arr[count++] = Integer.valueOf(m.group());
+//                }
+//            }
+//            NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
+
+
         }
-//        String path = "/chat.json";
-//
-//        JsonObject json = new JsonObject();
-//        json.addProperty("1. ", event.getMessage());
-//
-//        try (PrintWriter out = new PrintWriter(new FileWriter(path))) {
-//            out.write(json.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         return null;
 
     }
 
-    @SubscribeEvent
-    public String getdsd(PlayerEvent event) {
-        //event.getPlayer().getMainHandItem();
-
-        if(NpcEntity.replay != ""){
-            //event.getPlayer().displayClientMessage(new StringTextComponent(NpcEntity.replay),true);
-            event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: "+ NpcEntity.replay),null);
-            NpcEntity.replay = "";
-        }
-
-        return "";
-    }
 
 
 
+//    @SubscribeEvent
+//    public String getd(ClientChatEvent event) throws SQLException {
+//        System.out.println(event);
+//        String msg = event.getMessage();
+//        System.out.println(event.getOriginalMessage()+ "????????");
+//        msg = event.getMessage();
+//
+//        NpcEntity.msg = msg;
+//
+//        if(NpcEntity.msg != "") {
+//            lastRequest = System.currentTimeMillis();
+//            String finalMsg = msg;
+//            Thread t = new Thread(() -> {
+//                try {
+//                    MySQLExample sqlExample = new MySQLExample();
+//                    NpcEntity.msg = "";
+//                    System.out.println(response);
+//                    NpcEntity.replay = response;
+//
+//                    String str = finalMsg;
+//                    String regex ="[-]?\\d*";
+//                    Pattern p = Pattern.compile(regex);
+//
+//                    Matcher m = p.matcher(str);
+//                    int[] arr = new int[3];
+//                    //arr[0] = arr[1] = arr[2] = 0;
+//                    int count = 0;
+//                    while (m.find()) {
+//                        if (!"".equals(m.group())){
+//                            System.out.println("come here:"+ m.group());
+//                            arr[count++] = Integer.valueOf(m.group());
+//                        }
+//                    }
+//                    //System.out.println(arr);
+//                    //if(arr[0] != 0 && arr[1] != 0 &&arr[2] != 0)
+//                    NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//            t.start();
+//        }
+//        return null;
+//
+//    }
 
 //    @SubscribeEvent
 //    public String getdsd(PlayerEvent event) {
-//        //event.getEntity().getHandSlots();
-//        System.out.println(event.getEntity().getHandSlots());
+//        //event.getPlayer().getMainHandItem();
+//
+//        if(NpcEntity.replay != ""){
+//            //event.getPlayer().displayClientMessage(new StringTextComponent(NpcEntity.replay),true);
+//            event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: "+ NpcEntity.replay),null);
+//            NpcEntity.replay = "";
+//        }
+//
 //        return "";
 //    }
 
-
-
-
-//    @SubscribeEvent
-//    public static void onCommandsRegister(RegisterCommandsEvent event) {
-//        new SetHomeCommand(event.getDispatcher());
-//        new ReturnHomeCommand(event.getDispatcher());
-//        new NpcMoveCommand(event.getDispatcher());
-//        ConfigCommand.register(event.getDispatcher());
-//    }
-//
-//    @SubscribeEvent
-//    public static void onPlayerCloneEvent(PlayerEvent.Clone event) {
-//        if(!event.getOriginal().getCommandSenderWorld().isClientSide()) {
-//            event.getPlayer().getPersistentData().putIntArray(NpcTestMod.MOD_ID + "homepos",
-//                    event.getOriginal().getPersistentData().getIntArray(NpcTestMod.MOD_ID + "homepos"));
-//        }
-//    }
 
 }
 

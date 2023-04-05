@@ -6,6 +6,7 @@ import com.npc.test.commands.NpcMoveCommand;
 //import com.npc.test.commands.SetHomeCommand;
 import com.npc.test.commands.ReturnHomeCommand;
 import com.npc.test.commands.SetHomeCommand;
+import com.npc.test.commands.TaskCommand;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,7 +23,7 @@ public class ModEvents {
         new SetHomeCommand(event.getDispatcher());
         new ReturnHomeCommand(event.getDispatcher());
         new NpcMoveCommand(event.getDispatcher());
-
+        new TaskCommand(event.getDispatcher());
         ConfigCommand.register(event.getDispatcher());
     }
 

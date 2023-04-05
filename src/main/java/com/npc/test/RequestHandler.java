@@ -1,6 +1,7 @@
 package com.npc.test;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -19,7 +20,7 @@ public class RequestHandler {
     public String apiKey = "";
     public String model = "text-davinci-003";
     public float temperature = 0.6f;
-    private class OpenAIRequest {
+    private static class OpenAIRequest {
         String model = "text-davinci-002";
         String stop = "\"";
         String prompt = "hi";
@@ -36,14 +37,14 @@ public class RequestHandler {
         }
     }
 
-    private class OpenAIResponse {
-        class Choice {
+    private static class OpenAIResponse {
+        static class Choice {
             String text;
         }
         Choice[] choices;
     }
 
-    public String getAIResponse(String prompt) throws IOException {
+    public static String getAIResponse(String prompt) throws IOException {
         if (prompt.length() > 4096) prompt = prompt.substring(prompt.length() - 4096);
         //AIMobsMod.LOGGER.info("Prompt: " + prompt);
 
@@ -54,7 +55,7 @@ public class RequestHandler {
             HttpPost request = new HttpPost("https://api.openai.com/v1/completions");
             StringEntity params = new StringEntity(data, "UTF-8");
             request.addHeader("Content-Type", "application/json");
-            request.addHeader("Authorization", "Bearer " + "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");
+            request.addHeader("Authorization", "Bearer " + "");
             request.setEntity(params);
             HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();
@@ -63,3 +64,4 @@ public class RequestHandler {
         }
     }
 }
+

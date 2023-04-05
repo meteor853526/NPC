@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
+import com.npc.test.MySQLExample;
 import com.npc.test.NpcTestMod;
 import com.npc.test.PlayerChatEvent;
 import com.npc.test.RequestHandler;
@@ -81,6 +82,8 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class NpcEntity<T> extends TameableEntity{
@@ -183,7 +186,17 @@ public class NpcEntity<T> extends TameableEntity{
     }
     @Override
     public ActionResultType mobInteract(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-        ItemStack itemstack = p_230254_1_.getItemInHand(p_230254_2_);
+        Thread t = new Thread(() -> {
+            try {
+                MySQLExample sqlExample = new MySQLExample();
+                String response = RequestHandler.getAIResponse("你現在是一個minecraft裡的npc，根據以下的value請敘述出設定"+sqlExample.getData()+"並敘述出你的人物");
+                p_230254_1_.sendMessage(new StringTextComponent(response),null);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        t.start();
         //testTask(this.getBrain(),p_230254_1_,p_230254_2_);
 //        BlockPos playerPos = player.blockPosition();
 //        Vector3d pl = player.position();
