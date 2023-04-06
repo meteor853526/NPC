@@ -3,7 +3,10 @@ package com.npc.test;
 import com.mojang.brigadier.CommandDispatcher;
 import com.npc.test.client.ClientBubblesUtil;
 import com.npc.test.entity.ModEntityTypes;
+import com.npc.test.entity.chatbubble.ChatBubbleManger;
 import com.npc.test.entity.render.NpcRenderer;
+import com.npc.test.init.InitEntities;
+import com.npc.test.init.InitTrigger;
 import com.npc.test.item.ModItems;
 import com.npc.test.packet.SCSendModPresent;
 import com.npc.test.packet.SCSyncBubbleMessage;
@@ -50,7 +53,7 @@ public class NpcTestMod
     // Directly reference a log4j logger.
 
     public static final String MOD_ID = "npctestmod";
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     public static SimpleChannel channel = NetworkRegistry.newSimpleChannel((ResourceLocation)new ResourceLocation("npctestmod", "npctestmod"), () -> "1", "1"::equals, "1"::equals);
     CommandDispatcher<CommandSource> commandDispatcher;
     public NpcTestMod() {
@@ -75,6 +78,11 @@ public class NpcTestMod
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, BubblesConfig.CLIENT_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, BubblesConfig.SERVER_SPEC);
+        ChatBubbleManger.initDefaultChat();
+        InitEntities.DATA_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        InitTrigger.init();
+
+
     }
     @SubscribeEvent
     public void setup(final FMLCommonSetupEvent event)

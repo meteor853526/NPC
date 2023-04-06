@@ -55,13 +55,16 @@ public class MyTask implements Runnable {
 
                     if (!Objects.equals(setting, "") && !Objects.equals(chatRecord, "")) {
                         String response = RequestHandler.getAIResponse("You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! . Then is your character setting " + setting + "And this the record we talked before " + chatRecord + "If record show nothing which mean this is the first time we met .There is the current message: " + event.getMessage());
-                        System.out.println("You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! . Then is your character setting " + setting + "And this the record we talked before " + chatRecord + "If record show nothing which mean this is the first time we met .There is the current message: " + event.getMessage());
+                        System.out.println("You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! . " +
+                                "Then is your character setting " + setting + "And this the record we talked before "
+                                + chatRecord + "If record show nothing which mean this is the first time we met ." +
+                                "There is the current message: " + event.getMessage());
                         JSONObject chatjsonObject = new JSONObject(PlayerChatEvent.chatRecord);
                         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss z");
                         JSONObject temp = new JSONObject();
 
-                        temp.put("Player's message", event.getMessage());
-                        temp.put("you", response);
+                        temp.put("Human", event.getMessage());
+                        temp.put("AI", response);
 
                         String date = dateFormat.format(new Date());
                         chatjsonObject.put("chat flow(" + taskId + ")", temp);
@@ -76,7 +79,7 @@ public class MyTask implements Runnable {
                         NpcEntity.msg = "";
                         System.out.println(response);
                         NpcEntity.replay = response;
-                        event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + response), event.getPlayer().getUUID());
+                        event.getPlayer().sendMessage(new StringTextComponent( response), event.getPlayer().getUUID());
 
                         break;
                     }

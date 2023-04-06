@@ -12,6 +12,9 @@ import com.npc.test.api.event.InteractMaidEvent;
 import com.npc.test.api.event.MaidTickEvent;
 import com.npc.test.api.task.IMaidTask;
 import com.npc.test.entity.ai.brain.NpcBrain;
+import com.npc.test.entity.chatbubble.ChatBubbleManger;
+import com.npc.test.entity.chatbubble.ChatText;
+import com.npc.test.entity.chatbubble.MaidChatBubbles;
 import com.npc.test.entity.task.TaskManager;
 
 import net.minecraft.entity.*;
@@ -99,8 +102,9 @@ public class NpcEntity<T> extends TameableEntity{
     private static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(MemoryModuleType.HOME, MemoryModuleType.JOB_SITE, MemoryModuleType.POTENTIAL_JOB_SITE, MemoryModuleType.MEETING_POINT, MemoryModuleType.LIVING_ENTITIES, MemoryModuleType.VISIBLE_LIVING_ENTITIES, MemoryModuleType.VISIBLE_VILLAGER_BABIES, MemoryModuleType.NEAREST_PLAYERS, MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM, MemoryModuleType.WALK_TARGET, MemoryModuleType.LOOK_TARGET, MemoryModuleType.INTERACTION_TARGET, MemoryModuleType.BREED_TARGET, MemoryModuleType.PATH, MemoryModuleType.DOORS_TO_CLOSE, MemoryModuleType.NEAREST_BED, MemoryModuleType.HURT_BY, MemoryModuleType.HURT_BY_ENTITY, MemoryModuleType.NEAREST_HOSTILE, MemoryModuleType.SECONDARY_JOB_SITE, MemoryModuleType.HIDING_PLACE, MemoryModuleType.HEARD_BELL_TIME, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.LAST_SLEPT, MemoryModuleType.LAST_WOKEN, MemoryModuleType.LAST_WORKED_AT_POI, MemoryModuleType.GOLEM_DETECTED_RECENTLY);
     private static final ImmutableList<SensorType<? extends Sensor<? super VillagerEntity>>> SENSOR_TYPES = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES, SensorType.NEAREST_PLAYERS, SensorType.NEAREST_ITEMS, SensorType.NEAREST_BED, SensorType.HURT_BY, SensorType.VILLAGER_HOSTILES, SensorType.VILLAGER_BABIES, SensorType.SECONDARY_POIS, SensorType.GOLEM_DETECTED);
     private static final DataParameter<String> DATA_TASK = EntityDataManager.defineId(NpcEntity.class, DataSerializers.STRING);
-
-
+    private static final DataParameter<MaidChatBubbles> CHAT_BUBBLE = EntityDataManager.defineId(NpcEntity.class, MaidChatBubbles.DATA);
+    private static final DataParameter<String> DATA_MODEL_ID = EntityDataManager.defineId(NpcEntity.class, DataSerializers.STRING);
+    private static final String DEFAULT_MODEL_ID = "touhou_little_maid:hakurei_reimu";
     public NpcEntity(EntityType<? extends NpcEntity> type, World world) {
         super(type, world);
         ((GroundPathNavigator) this.getNavigation()).setCanOpenDoors(true);
@@ -174,6 +178,10 @@ public class NpcEntity<T> extends TameableEntity{
     @Override
     public void aiStep() {
         super.aiStep();
+        if (!level.isClientSide) {
+            ChatBubbleManger.tick(this);
+        }
+        ChatBubbleManger.tick(this);
     }
 
     public ActionResultType testTask(Brain<VillagerEntity> villagerBrain,PlayerEntity p_230254_1_, Hand p_230254_2_){
@@ -322,6 +330,24 @@ public class NpcEntity<T> extends TameableEntity{
         super.die(cause);
     }
 
+    public MaidChatBubbles getChatBubble() {
+        return this.entityData.get(CHAT_BUBBLE);
+    }
+
+
+
+    public void addChatBubble(long endTime, ChatText text) {
+        ChatBubbleManger.addChatBubble(endTime, text, this);
+    }
+
+    public void setChatBubble(MaidChatBubbles bubbles) {
+        this.entityData.set(CHAT_BUBBLE, bubbles);
+    }
+
+    public String getModelId() {
+        return this.entityData.get(DATA_MODEL_ID);
+    }
+
 //    public void sendItemBreakMessage(ItemStack stack) {
 //        if (!this.level.isClientSide) {
 //            NetworkHandler.sendToNearby(this, new ItemBreakMessage(this.getId(), stack));
@@ -379,7 +405,7 @@ public class NpcEntity<T> extends TameableEntity{
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-//        this.entityData.define(DATA_MODEL_ID, DEFAULT_MODEL_ID);
+            this.entityData.define(DATA_MODEL_ID, DEFAULT_MODEL_ID);
 //        this.entityData.define(DATA_TASK, TaskIdle.UID.toString());
 //        this.entityData.define(DATA_BEGGING, false);
 //        this.entityData.define(DATA_PICKUP, true);
@@ -396,7 +422,10 @@ public class NpcEntity<T> extends TameableEntity{
 //        this.entityData.define(SCHEDULE_MODE, MaidSchedule.DAY);
 //        this.entityData.define(RESTRICT_CENTER, BlockPos.ZERO);
 //        this.entityData.define(RESTRICT_RADIUS, MaidConfig.MAID_HOME_RANGE.get().floatValue());
-//        this.entityData.define(CHAT_BUBBLE, MaidChatBubbles.DEFAULT);
+        this.entityData.define(CHAT_BUBBLE, MaidChatBubbles.DEFAULT);
+    }
+    public void setModelId(String modelId) {
+        this.entityData.set(DATA_MODEL_ID, modelId);
     }
 
     @Override

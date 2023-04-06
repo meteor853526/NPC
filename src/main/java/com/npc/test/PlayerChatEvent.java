@@ -57,22 +57,22 @@ public class PlayerChatEvent {
 
     public static String chatRecord ="";
     public static ThreadManager threadManager = new ThreadManager(new ThreadPoolExecutor(10, 10, 10L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()));
-    @SubscribeEvent
-    public String getMsg(PlayerEvent event) {
-        ItemStack item = event.getPlayer().getMainHandItem();
-        //System.out.println(new PlayerInteractEvent.LeftClickBlock(player,player.blockPosition(),player.getDirection()).getUseBlock());
-
-        String tool = String.valueOf(item);
-
-        if(tool == "diamond_pickaxe" ){
-
-        }
-        //String tool = String.valueOf(event.getPlayer().getMainHandItem());
-        //event.getPlayer().sendMessage(new StringTextComponent( tool),null);
-//        NpcEntity.msg = event.getGuiContainer().getNarrationMessage();
-//        return event.getGuiContainer().getNarrationMessage();
-        return "";
-    }
+//    @SubscribeEvent
+//    public String getMsg(PlayerEvent event) {
+//        ItemStack item = event.getPlayer().getMainHandItem();
+//        //System.out.println(new PlayerInteractEvent.LeftClickBlock(player,player.blockPosition(),player.getDirection()).getUseBlock());
+//
+//        String tool = String.valueOf(item);
+//
+//        if(tool == "diamond_pickaxe" ){
+//
+//        }
+//        //String tool = String.valueOf(event.getPlayer().getMainHandItem());
+//        //event.getPlayer().sendMessage(new StringTextComponent( tool),null);
+////        NpcEntity.msg = event.getGuiContainer().getNarrationMessage();
+////        return event.getGuiContainer().getNarrationMessage();
+//        return "";
+//    }
     @SubscribeEvent
     public static void BlockLeftClickEvent(PlayerInteractEvent.LeftClickBlock event) {
         String tool = String.valueOf(event.getPlayer().getMainHandItem());
