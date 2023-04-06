@@ -48,12 +48,12 @@ public class WalkToTargetTask extends Task<MobEntity> {
          WalkTarget walktarget = brain.getMemory(WALK_TARGET).get();
          boolean flag = this.reachedTarget(owner, walktarget);
          if (!flag && this.tryComputePath(owner, walktarget, worldIn.getGameTime())) {
-            this.lastTargetPos = walktarget.getTarget().currentBlockPosition();
+            this.lastTargetPos = walktarget.getTarget().getBlockPos();
             return true;
          } else {
-            brain.eraseMemory(WALK_TARGET);
+            brain.removeMemory(WALK_TARGET);
             if (flag) {
-               brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+               brain.removeMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
             }
 
             return false;
@@ -65,28 +65,28 @@ public class WalkToTargetTask extends Task<MobEntity> {
 
       if (this.path != null && this.lastTargetPos != null) {
          Optional<WalkTarget> optional = entityIn.getBrain().getMemory(WALK_TARGET);
-         PathNavigator pathnavigator = entityIn.getNavigation();
-         return !pathnavigator.isDone() && optional.isPresent() && !this.reachedTarget(entityIn, optional.get());
+         PathNavigator pathnavigator = entityIn.getNavigator();
+         return !pathnavigator.noPath() && optional.isPresent() && !this.reachedTarget(entityIn, optional.get());
       } else {
          return false;
       }
    }
 
    protected void stop(ServerWorld worldIn, MobEntity entityIn, long gameTimeIn) {
-      if (entityIn.getBrain().hasMemoryValue(WALK_TARGET) && !this.reachedTarget(entityIn, entityIn.getBrain().getMemory(WALK_TARGET).get()) && entityIn.getNavigation().isStuck()) {
+      if (entityIn.getBrain().hasMemory(WALK_TARGET) && !this.reachedTarget(entityIn, entityIn.getBrain().getMemory(WALK_TARGET).get()) && entityIn.getNavigator().isStuck()) {
          this.remainingCooldown = worldIn.getRandom().nextInt(40);
       }
 
-      entityIn.getNavigation().stop();
-      entityIn.getBrain().eraseMemory(WALK_TARGET);
-      entityIn.getBrain().eraseMemory(MemoryModuleType.PATH);
+      entityIn.getNavigator().stop();
+      entityIn.getBrain().removeMemory(WALK_TARGET);
+      entityIn.getBrain().removeMemory(MemoryModuleType.PATH);
       this.path = null;
    }
 
    protected void start(ServerWorld worldIn, MobEntity entityIn, long gameTimeIn) {
 
       entityIn.getBrain().setMemory(MemoryModuleType.PATH, this.path);
-      entityIn.getNavigation().moveTo(this.path, (double)this.speedModifier);
+      entityIn.getNavigator().noPath(this.path, (double)this.speedModifier);
    }
 
 //   public void set(MobEntity entityIn, Vector3d pos){
@@ -94,7 +94,7 @@ public class WalkToTargetTask extends Task<MobEntity> {
 //   }
 
    protected void tick(ServerWorld worldIn, MobEntity owner, long gameTime) {
-      Path path = owner.getNavigation().getPath();
+      Path path = owner.getNavigator().getPath();
       Brain<?> brain = owner.getBrain();
 
       if (NpcEntity.pos != null) {

@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "npctestmod:block/npc_container" }
+  }
+}

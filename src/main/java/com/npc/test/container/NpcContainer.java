@@ -1,6 +1,5 @@
 package com.npc.test.container;
 
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -10,27 +9,29 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 
 public class NpcContainer extends Container {
     private IIntArray  intArray;
-    private final IInventory inventory;
+    //    private final IInventory inventory;
     protected NpcContainer(int id, PlayerInventory playerInventory, BlockPos pos, WorldBorder world, IIntArray  intArray) {
         super(ContainerTypeRegistry.npcContainer.get(), id);
         this.intArray = intArray;
-//        trackIntArray(this.intArray);
-        addDataSlots(this.intArray);
-//        NpcContainerTileEntity npcContainerTileEntity = (NpcContainerTileEntity) Minecraft.getInstance().level.getEntity();
-        this.addSlot(new Slot(this.inventory, 0, 80, 32));
+        trackIntArray(this.intArray);
+//        getIntArray(this.intArray);
+        NpcContainerTileEntity npcContainerTileEntity = (NpcContainerTileEntity) Minecraft.getInstance().world.getTileEntity(pos);
+//        this.addSlot(new Slot(this.inventory, 0, 80, 32));
+        this.addSlot(new Slot(npcContainerTileEntity.getInventory(), 0, 80, 32));
         layoutPlayerInventorySlots(playerInventory, 8, 84);
     }
 
-//    @Override
+    //    @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return true;
     }
 
-//    @Override
+    //    @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         return ItemStack.EMPTY;
     }

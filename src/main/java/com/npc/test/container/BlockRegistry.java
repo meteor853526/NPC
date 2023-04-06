@@ -7,8 +7,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, "npctestmod");
-    public static RegistryObject<Block> obsidianFirstContainerBlock = BLOCKS.register("npc_container", () -> {
+    public static RegistryObject<Block> npcContainerBlock = BLOCKS.register("npc_container", () -> {
         return new NpcContainerBlock();
     });
-    public static NpcContainerItemNumber npcContainerBlock;
 }

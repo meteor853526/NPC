@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "npctestmod:block/npc_container"
+  }
+}

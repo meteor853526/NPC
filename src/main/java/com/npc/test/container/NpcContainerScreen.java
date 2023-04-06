@@ -17,25 +17,21 @@ public class NpcContainerScreen extends ContainerScreen<NpcContainer> {
     public void render(MatrixStack pose, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(pose);
         super.render(pose, mouseX, mouseY, partialTicks);
-//        renderHoveredToolTip(mouseX, mouseY);
-        renderTooltip(pose, mouseX, mouseY);
+        renderHoveredTooltip(pose, mouseX, mouseY);
+//        renderTooltip(pose, mouseX, mouseY);
     }
 
     public NpcContainerScreen(NpcContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
-        this.titleLabelX = textureWidth;
-        this.inventoryLabelX = textureHeight;
+        this.xSize = textureWidth;
+        this.ySize = textureHeight;
     }
 
-    @Override
-    protected void renderBg(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
-
-    }
 
 //    drawGuiContainerForegroundLayer add pose
 //    @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack pose, int mouseX, int mouseY) {
-        this.drawString(pose,this.font, Integer.toString(this.getMenu().getIntArray().get(0)), 82, 20, 0xeb0505);
+        this.drawString(pose,this.font, Integer.toString(this.getContainer().getIntArray().get(0)), 82, 20, 0xeb0505);
     }
 
 //    @Override
@@ -43,9 +39,9 @@ public class NpcContainerScreen extends ContainerScreen<NpcContainer> {
         this.renderBackground(pose);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().getTexture(NPC_CONTAINER_RESOURCE);
-        int i = (this.width - this.titleLabelX) / 2;
-        int j = (this.height - this.inventoryLabelX) / 2;
-        blit(pose, i, j, 0, 0, titleLabelX, inventoryLabelX, this.textureWidth, textureHeight);
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        blit(pose, i, j, 0, 0, xSize, ySize, this.textureWidth, textureHeight);
     }
 
 }

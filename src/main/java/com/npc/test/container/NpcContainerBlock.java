@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -23,11 +24,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class NpcContainerBlock extends Block {
-    public static final DirectionProperty FACING = HorizontalBlock.FACING;
-    public NpcContainerBlock(AbstractBlock.Properties properties) {
-        super(properties);
-//        super(Properties.of(Material.STONE) .harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(5f));
-    }
+//    public static final DirectionProperty FACING = HorizontalBlock.LOGGER;
+    public NpcContainerBlock() { super(Properties.create(Material.ROCK).hardnessAndResistance(5));}
 //    public NpcContainerBlock(EntityType type, World world) {  // Block change to NPCEntity
 //        super(type, world);
 //    }
@@ -39,25 +37,22 @@ public class NpcContainerBlock extends Block {
     }
 
     @Nullable
-    public NpcContainerTileEntity createTileEntity(EntityState state, IBlockReader world) {
+    public NpcContainerTileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new NpcContainerTileEntity();
     }
 
     @SuppressWarnings("deprecation")
-//    @Override
-    public ActionResultType onBlockActivated(EntityState state, World worldIn, BlockState pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 //        BlockPayTraceResult ? how to npc
 //        isRemote => isClientSide ?
-//        if (!worldIn.isClientSide && handIn == Hand.MAIN_HAND) {
-//            NpcContainerTileEntity npcContainerTileEntity = (NpcContainerTileEntity) worldIn.getBlockEntity(pos);
-//            NetworkHooks.openGui((ServerPlayerEntity) player, npcContainerTileEntity, (PacketBuffer packerBuffer) -> {
-//                packerBuffer.writeBlockPos(npcContainerTileEntity.getPos());
-//            });
-//        }
-//        return ActionResultType.SUCCESS;
-        if (worldIn.isClientSide) {
-            return ActionResultType.SUCCESS;
+        if (!worldIn.isRemote && handIn == Hand.MAIN_HAND) {
+            NpcContainerTileEntity npcContainerTileEntity = (NpcContainerTileEntity) worldIn.getTileEntity(pos);
+            NetworkHooks.openGui((ServerPlayerEntity) player, npcContainerTileEntity, (PacketBuffer packerBuffer) -> {
+                packerBuffer.writeBlockPos(npcContainerTileEntity.getPos());
+            });
         }
+        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
 
 }

@@ -12,7 +12,7 @@ public class ModBusEventHandler {
     @SubscribeEvent
     public static void onClientSetupEvent(FMLClientSetupEvent event) {
 //        registerFactory => register
-        ScreenManager.register(ContainerTypeRegistry.npcContainer.get(), (NpcContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) -> {
+        ScreenManager.registerFactory(ContainerTypeRegistry.npcContainer.get(), (NpcContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) -> {
             return new NpcContainerScreen(screenContainer, inv, titleIn);
         });
     }
