@@ -55,7 +55,7 @@ public class RequestHandler {
             HttpPost request = new HttpPost("https://api.openai.com/v1/completions");
             StringEntity params = new StringEntity(data, "UTF-8");
             request.addHeader("Content-Type", "application/json");
-            request.addHeader("Authorization", "Bearer " + "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");
+            request.addHeader("Authorization", "Bearer " + "");
             request.setEntity(params);
             HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();
