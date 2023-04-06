@@ -1,6 +1,7 @@
 package com.example.examplemod;
 
 import com.example.examplemod.block.ModBlocks;
+import com.example.examplemod.container.TileEntityTypeRegistry;
 import com.example.examplemod.item.ModItems;
 import com.example.examplemod.world.structure.ModStructures;
 import net.minecraft.block.Block;
@@ -38,6 +39,10 @@ public class ExampleMod
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
         ModStructures.register(eventBus);
+
+        com.example.examplemod.container.BlockRegistry.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        com.example.examplemod.container.TileEntityTypeRegistry.TILE_ENTITY_TYPE_DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        com.example.examplemod.container.ContainerTypeRegistry.CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         eventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
         eventBus.addListener(this::enqueueIMC);

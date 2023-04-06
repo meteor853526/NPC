@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -47,17 +48,14 @@ public class NpcContainerBlock extends Block {
     public ActionResultType onBlockActivated(EntityState state, World worldIn, BlockState pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 //        BlockPayTraceResult ? how to npc
 //        isRemote => isClientSide ?
-//        if (!worldIn.isRemote && handIn == Hand.MAIN_HAND) {
-//            NpcContainerTileEntity npcContainerTileEntity = (NpcContainerTileEntity) worldIn.tickBlockEntities(pos);
+        if (!worldIn.isRemote && handIn == Hand.MAIN_HAND) {
+////            NpcContainerTileEntity npcContainerTileEntity = (NpcContainerTileEntity) worldIn.getTileEntity(pos);
 //            NetworkHooks.openGui((ServerPlayerEntity) player, npcContainerTileEntity, (PacketBuffer packerBuffer) -> {
 //                packerBuffer.writeBlockPos(npcContainerTileEntity.getPos());
 //            });
-//        }
-//        return ActionResultType.SUCCESS;
-        if (!worldIn.isRemote) {
-
         }
         return ActionResultType.SUCCESS;
     }
+
 
 }
