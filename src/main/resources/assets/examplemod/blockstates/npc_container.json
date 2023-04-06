@@ -1,3 +1,5 @@
 {
-  "parent": "examplemod:block/npc_container"
+  "variants": {
+    "": { "model": "examplemod:block/npc_container" }
+  }
 }

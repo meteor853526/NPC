@@ -23,6 +23,7 @@ public class NpcContainer extends Container {
 //        getIntArray(this.intArray);
         NpcContainerTileEntity npcContainerTileEntity = (NpcContainerTileEntity) Minecraft.getInstance().world.getTileEntity(pos);
 //        this.addSlot(new Slot(this.inventory, 0, 80, 32));
+        this.addSlot(new Slot(npcContainerTileEntity.getInventory(), 0, 80, 32));
         layoutPlayerInventorySlots(playerInventory, 8, 84);
     }
 

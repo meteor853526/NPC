@@ -13,7 +13,7 @@ public class ExampleTags {
     public static class Blocks  {
 
         public static final Tags.IOptionalNamedTag<Block> FIRESTONE_CLICKABLE_BLOCKS = createTag("firestone_clickable_blocks");
-
+//        public static final Tags.IOptionalNamedTag<Block> NPC_CONTAINER_BLOCK = createTag("npc_container_block");
         private static Tags.IOptionalNamedTag<Block> createTag(String name) {
             return BlockTags.createOptional(new ResourceLocation(ExampleMod.MOD_ID, name));
         }
