@@ -10,10 +10,15 @@ import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -49,13 +54,16 @@ public class NpcContainerBlock extends Block {
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 //        BlockPayTraceResult ? how to npc
 //        isRemote => isClientSide ?
-        if (!worldIn.isRemote && handIn == Hand.MAIN_HAND) {
+        if (!worldIn.isRemote) {
             NpcContainerTileEntity npcContainerTileEntity = (NpcContainerTileEntity) worldIn.getTileEntity(pos);
-            NetworkHooks.openGui((ServerPlayerEntity) player, npcContainerTileEntity, (PacketBuffer packerBuffer) -> {
-                packerBuffer.writeBlockPos(npcContainerTileEntity.getPos());
-            });
+            if(npcContainerTileEntity instanceof NpcContainerTileEntity){
+                NetworkHooks.openGui(((ServerPlayerEntity)player), npcContainerTileEntity, npcContainerTileEntity.getPos());
+            }else {
+                throw new IllegalStateException("Our Container provider is missing!");
+            }
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+//        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return ActionResultType.SUCCESS;
     }
 
 }

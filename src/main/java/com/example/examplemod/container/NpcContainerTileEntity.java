@@ -33,7 +33,7 @@ public class NpcContainerTileEntity extends TileEntity implements ITickableTileE
 
     @Override
     public ITextComponent getDisplayName() {
-        return new StringTextComponent("Fist Container");
+        return new StringTextComponent("NPC Container");
     }
 
     @Nullable

@@ -16,7 +16,7 @@ public class ContainerTypeRegistry {
     public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, "examplemod");
     public static RegistryObject<ContainerType<NpcContainer>> npcContainer = CONTAINERS.register("npc_container", () -> {
         return IForgeContainerType.create((int windowId, PlayerInventory inv, PacketBuffer data) -> {
-            return new NpcContainer(windowId, inv, data.readBlockPos(), (World) Minecraft.getInstance().world.getWorldProfiler(), new NpcContainerItemNumber());
+            return new NpcContainer(windowId, inv, data.readBlockPos(),  Minecraft.getInstance().world, new NpcContainerItemNumber());
         });
     });
 }
