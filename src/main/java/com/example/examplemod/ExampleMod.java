@@ -2,6 +2,7 @@ package com.example.examplemod;
 
 import com.example.examplemod.block.ModBlocks;
 import com.example.examplemod.container.TileEntityTypeRegistry;
+import com.example.examplemod.gui.ItemRegistry;
 import com.example.examplemod.item.ModItems;
 import com.example.examplemod.world.structure.ModStructures;
 import net.minecraft.block.Block;
@@ -40,9 +41,11 @@ public class ExampleMod
         ModBlocks.register(eventBus);
         ModStructures.register(eventBus);
 
+        com.example.examplemod.container.ItemRegistry.ITEMS.register(eventBus);
         com.example.examplemod.container.BlockRegistry.BLOCKS.register(eventBus);
         com.example.examplemod.container.TileEntityTypeRegistry.TILE_ENTITY_TYPE_DEFERRED_REGISTER.register(eventBus);
         com.example.examplemod.container.ContainerTypeRegistry.CONTAINERS.register(eventBus);
+        com.example.examplemod.gui.ItemRegistry.ITEMS.register(eventBus);
         eventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
         eventBus.addListener(this::enqueueIMC);

@@ -1,6 +1,7 @@
 package com.example.examplemod.container;
 
 
+import com.example.examplemod.gui.OpenGuI;
 import com.sun.org.apache.xerces.internal.impl.validation.EntityState;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -18,7 +19,9 @@ import net.minecraft.world.World;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ActionResultType;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -54,6 +57,5 @@ public class NpcContainerBlock extends Block {
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
-
 
 }
