@@ -53,25 +53,28 @@ public class MyTask implements Runnable {
             try {
                 while (true) {
 
-                    if (!Objects.equals(setting, "") && !Objects.equals(chatRecord, "")) {
+                    if (!Objects.equals(setting, "")) {
+
+                        System.out.println("?????????????????????????????????????");
                         String response = RequestHandler.getAIResponse("You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! . Then is your character setting " + setting + "And this the record we talked before " + chatRecord + "If record show nothing which mean this is the first time we met .There is the current message: " + event.getMessage());
                         System.out.println("You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! . " +
                                 "Then is your character setting " + setting + "And this the record we talked before "
                                 + chatRecord + "If record show nothing which mean this is the first time we met ." +
                                 "There is the current message: " + event.getMessage());
                         JSONObject chatjsonObject = new JSONObject(PlayerChatEvent.chatRecord);
-                        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss z");
+
                         JSONObject temp = new JSONObject();
 
-                        temp.put("Human", event.getMessage());
+                        temp.put("Human:", event.getMessage());
                         temp.put("AI", response);
 
-                        String date = dateFormat.format(new Date());
+
                         chatjsonObject.put("chat flow(" + taskId + ")", temp);
 
                         try {
-                            FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.json");         // writing back to the file
-                            fileWriter.write(chatjsonObject.toString());
+                            FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.txt",true);         // writing back to the file
+                            fileWriter.write("Human:"+ event.getMessage()+"\\n");
+                            fileWriter.write("AI:"+ response+"\\n");
                             fileWriter.flush();
                         } catch (Exception e) {
                             e.printStackTrace();

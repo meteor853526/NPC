@@ -29,6 +29,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.ConfigCommand;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -97,9 +100,12 @@ public class PlayerChatEvent {
             File file = new File("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\NpcSetting.json");
             String settingContent = FileUtils.readFileToString(file,"UTF-8");
             setting = settingContent;
-            File chatfile = new File("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.json");
-            String chatContent = FileUtils.readFileToString(chatfile,"UTF-8");
-            chatRecord = chatContent;
+
+            String text = new String(Files.readAllBytes(Paths.get("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.txt")), StandardCharsets.UTF_8);
+
+            //FileReader chatfile = new FileReader("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.txt");
+           // String chatContent = FileUtils.readFileToString(chatfile,"UTF-8");
+            chatRecord = text;
 //            Thread t = new Thread(() -> {
 //                try {
 //
@@ -145,7 +151,7 @@ public class PlayerChatEvent {
 //                }
 //            });
 //            t.start();
-            threadManager.execute(new MyTask(count++,event,settingContent,chatContent));
+            threadManager.execute(new MyTask(count++,event,settingContent,chatRecord));
 
 
 
