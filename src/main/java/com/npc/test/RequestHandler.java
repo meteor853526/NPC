@@ -60,8 +60,9 @@ public class RequestHandler {
             HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();
             String responseString = EntityUtils.toString(entity, "UTF-8");
-            System.out.println("SasdasdasddddasddasdsadauHdfiudghasuidhasuidhasuidashiduasghd");
-            String temp = new Gson().fromJson(responseString, OpenAIResponse.class).choices[0].text.replace("\r", "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");
+            System.out.println(prompt);
+            String temp = new Gson().fromJson(responseString, OpenAIResponse.class).choices[0].text.replace("\r", "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");
+            System.out.println(temp);
             return temp.replace("\n", " ");
         }
     }

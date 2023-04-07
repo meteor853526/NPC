@@ -73,8 +73,8 @@ public class MyTask implements Runnable {
 
                         try {
                             FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.txt",true);         // writing back to the file
-                            fileWriter.write("Human:"+ event.getMessage()+"\\n");
-                            fileWriter.write("AI:"+ response+"\\n");
+                            fileWriter.write("Human:"+ event.getMessage());
+                            fileWriter.write("AI:"+ response);
                             fileWriter.flush();
                         } catch (Exception e) {
                             e.printStackTrace();
