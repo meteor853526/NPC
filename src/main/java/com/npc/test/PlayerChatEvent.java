@@ -26,8 +26,13 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.ConfigCommand;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.*;
 
 import java.io.FileWriter;
@@ -46,6 +51,8 @@ public class PlayerChatEvent {
     public static String msg = "";
     public static String NpcData = null;
     public static long lastRequest = 0;
+    public static  int count = 0;
+    public static String setting = "";
     public static ThreadManager threadManager = new ThreadManager(new ThreadPoolExecutor(10, 10, 10L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()));
     @SubscribeEvent
     public String getMsg(PlayerEvent event) {
@@ -82,37 +89,14 @@ public class PlayerChatEvent {
 
         if(msg.charAt(0) == '#') {
             lastRequest = System.currentTimeMillis();
-            Thread t = new Thread(() -> {
-                try {
-                    MySQLExample sqlExample = new MySQLExample();
+//            File file = new File("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\NpcSetting.json");
+            File file = new File("C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\NpcSetting.json");
+            String settingContent = FileUtils.readFileToString(file,"UTF-8");
+            setting = settingContent;
 
-                    String response = RequestHandler.getAIResponse("Now you are an npc in Minecraft，according the value to describe the setting"+sqlExample.getData()+"question:"+ event.getMessage());
-                    NpcEntity.msg = "";
-                    System.out.println(response);
-                    NpcEntity.replay = response;
-                    event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + response), event.getPlayer().getUUID());
-                    String regex ="[-]?\\d*";
-                    Pattern p = Pattern.compile(regex);
+//            String text = new String(Files.readAllBytes(Paths.get("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.txt")), StandardCharsets.UTF_8);
+            String text = new String(Files.readAllBytes(Paths.get("C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.txt")), StandardCharsets.UTF_8);
 
-                    Matcher m = p.matcher(msg);
-                    int[] arr = new int[3];
-                    //arr[0] = arr[1] = arr[2] = 0;
-                    int count = 0;
-                    while (m.find()) {
-                        if (!"".equals(m.group())){
-                            System.out.println("come here:"+ m.group());
-                            arr[count++] = Integer.parseInt(m.group());
-                        }
-                    }
-                    //System.out.println(arr);
-                    //if(arr[0] != 0 && arr[1] != 0 &&arr[2] != 0)
-                    NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            t.start();
             //event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + NpcEntity.replay), event.getPlayer().getUUID());
 
 

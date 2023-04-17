@@ -9,10 +9,9 @@ public class ThreadManagerExample {
     public static void main(String[] args) {
         //ThreadManager threadManager = new ThreadManager(10);
         ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 10, 10L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-        Runnable task = new MyTask(1,"??",null);
+        //Runnable task = new MyTask(1,"??",null);
 
 
         //threadManager.shutdown();
     }
 }
-
