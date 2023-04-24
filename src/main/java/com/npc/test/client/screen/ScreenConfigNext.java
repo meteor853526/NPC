@@ -23,7 +23,7 @@
 package com.npc.test.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.npc.test.BubblesConfig;
+import com.npc.test.config.BubblesConfig;
 import com.npc.test.util.ResetUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;

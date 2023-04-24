@@ -18,7 +18,7 @@
  */
 package com.npc.test.client;
 
-import com.npc.test.BubblesConfig;
+import com.npc.test.config.BubblesConfig;
 import com.npc.test.client.screen.ScreenConfig;
 import com.npc.test.util.Bubble;
 

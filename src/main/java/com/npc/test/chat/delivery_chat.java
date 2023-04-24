@@ -1,27 +1,23 @@
-package com.npc;
+package com.npc.test.chat;
 
 import com.npc.test.PlayerChatEvent;
 import com.npc.test.RequestHandler;
 import com.npc.test.passive.NpcEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.ServerChatEvent;
-import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Objects;
 
-public class MyTask implements Runnable {
+public class delivery_chat implements Runnable {
     private int taskId;
 
     private String setting;
     private String chatRecord;
     public static String followmsg = null;
     public ServerChatEvent event;
-    public MyTask(int taskId, ServerChatEvent event,String setting,String chatRecord) {
+    public delivery_chat(int taskId, ServerChatEvent event, String setting, String chatRecord) {
         this.taskId = taskId;
 
         this.event = event;
@@ -54,9 +50,6 @@ public class MyTask implements Runnable {
                 while (true) {
 
                     if (!Objects.equals(setting, "")) {
-
-                        System.out.println("?????????????????????????????????????");
-
                         String response = RequestHandler.getAIResponse("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "
                                 + setting + "And this the record we talked before " + chatRecord
                                 + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met .There is the current message: "
@@ -68,32 +61,19 @@ public class MyTask implements Runnable {
                                 "Then is your character setting " + setting + "And this the record we talked before "
                                 + chatRecord + "If record show nothing which mean this is the first time we met ." +
                                 "There is the current message: " + event.getMessage());
-                        //JSONObject chatjsonObject = new JSONObject(PlayerChatEvent.chatRecord);
-//                        JSONObject temp = new JSONObject();
-//
-//                        temp.put("Human:", event.getMessage());
-//                        temp.put("AI", response);
-                        //chatjsonObject.put("chat flow(" + taskId + ")", temp);
 
                         try {
-                            FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.txt",true);         // writing back to the file
+                            FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);         // writing back to the file
                             fileWriter.write("Human:"+ event.getMessage().replace("Hi there! I'm Diedie, the farmer chief. It looks like we haven't talked before. For 1 carrot it costs 3 gold coins, 1 wheat costs 2 gold coins and 1 beetroot is 5 gold coins.", " ") +"\\n");
-
-                            if (taskId == 0 ){
-                                fileWriter.write( "diedie:"+response +"\\n");
-                            }else{
-                                fileWriter.write( response +"\\n");
-                            }
+                            fileWriter.write( response +"\\n");
 
                             fileWriter.flush();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        NpcEntity.msg = "";
                         System.out.println(response);
-                        NpcEntity.replay = response;
-                        event.getPlayer().sendMessage(new StringTextComponent( response), event.getPlayer().getUUID());
-
+                        PlayerChatEvent.ChatReply = response;
+                        event.getPlayer().sendMessage(new StringTextComponent("@:"+response), event.getPlayer().getUUID());
                         break;
                     }
                 }

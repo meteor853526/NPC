@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.npc.test.client.renderer.texture.SizeTexture;
-import com.npc.test.entity.chatbubble.ChatBubbleManger;
+import com.npc.test.entity.chatbubble.DeliveryChatBubbleManger;
 import com.npc.test.entity.chatbubble.ChatText;
 import com.npc.test.entity.chatbubble.MaidChatBubbles;
 import com.npc.test.entity.render.DeliveryRenderer;
@@ -190,7 +190,7 @@ public class DeliveryChatBubbleRenderer {
     }
 
     private static void renderChatBubbleBody(int startX, int startY, int stringWidth, RenderData data, Consumer<RenderData> consumer) {
-        ResourceLocation bg = ChatBubbleManger.DEFAULT_CHAT_BUBBLE.getBg();
+        ResourceLocation bg = DeliveryChatBubbleManger.DEFAULT_CHAT_BUBBLE.getBg();
         float height = getChatBubbleStartHeight(data.renderer, data.maid);
 
         int count = stringWidth / 20;

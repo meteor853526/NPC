@@ -3,6 +3,7 @@ package com.npc.test.entity.chatbubble;
 
 import com.google.common.collect.Lists;
 import com.npc.test.NpcTestMod;
+import com.npc.test.PlayerChatEvent;
 import com.npc.test.client.resource.pojo.ChatBubbleInfo;
 import com.npc.test.client.resource.pojo.MaidModelInfo;
 import com.npc.test.entity.info.ServerCustomPackLoader;
@@ -28,6 +29,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 
+import static com.npc.test.PlayerChatEvent.ChatMsg;
 import static com.npc.test.entity.chatbubble.ChatText.EMPTY_ICON_PATH;
 import static com.npc.test.entity.chatbubble.MaidChatBubbles.EMPTY;
 import static com.npc.test.entity.info.ServerCustomPackLoader.GSON;
@@ -133,13 +135,13 @@ public class ChatBubbleManger {
     }
 
     public static void tick(NpcEntity npc) {
-        if(!Objects.equals(NpcEntity.replay, "")){
+        if(!Objects.equals(PlayerChatEvent.ChatReply, "") && ChatMsg.charAt(0) == '#'){
             long offset1 = npc.getUUID().getLeastSignificantBits() % CHECK_RATE;
             checkTimeoutChatBubble(npc);
 //            if ((npc.tickCount + offset1) % CHECK_RATE == 0) {
-//                addMainChatText(npc,NpcEntity.replay);
+//                addMainChatText(npc,PlayerChatEvent.ChatReply);
 //            }
-            addMainChatText(npc,NpcEntity.replay);
+            addMainChatText(npc,PlayerChatEvent.ChatReply);
         }
 
 
@@ -171,15 +173,15 @@ public class ChatBubbleManger {
         long currentTimeMillis = System.currentTimeMillis();
         if (bubble1 != EMPTY && currentTimeMillis > bubble1.getLeft()) {
             bubble1 = EMPTY;
-            NpcEntity.replay = "";
+            PlayerChatEvent.ChatReply = "";
         }
         if (bubble2 != EMPTY && currentTimeMillis > bubble2.getLeft()) {
             bubble2 = EMPTY;
-            NpcEntity.replay = "";
+            PlayerChatEvent.ChatReply = "";
         }
         if (bubble3 != EMPTY && currentTimeMillis > bubble3.getLeft()) {
             bubble3 = EMPTY;
-            NpcEntity.replay = "";
+            PlayerChatEvent.ChatReply = "";
         }
         maid.setChatBubble(new MaidChatBubbles(bubble1, bubble2, bubble3));
     }

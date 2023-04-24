@@ -7,7 +7,7 @@
 package com.npc.test.util;
 
 import com.google.common.collect.Lists;
-import com.npc.test.BubblesConfig;
+import com.npc.test.config.BubblesConfig;
 import com.npc.test.client.ClientBubblesUtil;
 
 

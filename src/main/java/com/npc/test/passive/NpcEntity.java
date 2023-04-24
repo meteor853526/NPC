@@ -1,92 +1,45 @@
 package com.npc.test.passive;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
-import com.npc.test.MySQLExample;
-import com.npc.test.NpcTestMod;
-import com.npc.test.PlayerChatEvent;
-import com.npc.test.RequestHandler;
-import com.npc.test.api.event.InteractMaidEvent;
-import com.npc.test.api.event.MaidTickEvent;
-import com.npc.test.api.task.IMaidTask;
 import com.npc.test.entity.ai.brain.NpcBrain;
 import com.npc.test.entity.chatbubble.ChatBubbleManger;
 import com.npc.test.entity.chatbubble.ChatText;
 import com.npc.test.entity.chatbubble.MaidChatBubbles;
-import com.npc.test.entity.task.TaskManager;
 
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.BrainUtil;
-import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.brain.memory.WalkTarget;
-import net.minecraft.entity.ai.brain.schedule.Activity;
-import net.minecraft.entity.ai.brain.schedule.Schedule;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.ai.brain.task.MoveToTargetTask;
-import net.minecraft.entity.ai.brain.task.VillagerTasks;
 import net.minecraft.entity.ai.brain.task.WalkToTargetTask;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.monster.ZombifiedPiglinEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.entity.PartEntity;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class NpcEntity<T> extends TameableEntity{
@@ -94,10 +47,9 @@ public class NpcEntity<T> extends TameableEntity{
             .sized(0.6f, 1.0f).clientTrackingRange(10).build("npc");
     public static final String MODEL_ID_TAG = "ModelId";
     public static long lastRequest = 0;
-    public static String msg = "";
 
     public static BlockPos pos = null;
-    public static String replay = "";
+
 
 
     private static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(MemoryModuleType.HOME, MemoryModuleType.JOB_SITE, MemoryModuleType.POTENTIAL_JOB_SITE, MemoryModuleType.MEETING_POINT, MemoryModuleType.LIVING_ENTITIES, MemoryModuleType.VISIBLE_LIVING_ENTITIES, MemoryModuleType.VISIBLE_VILLAGER_BABIES, MemoryModuleType.NEAREST_PLAYERS, MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM, MemoryModuleType.WALK_TARGET, MemoryModuleType.LOOK_TARGET, MemoryModuleType.INTERACTION_TARGET, MemoryModuleType.BREED_TARGET, MemoryModuleType.PATH, MemoryModuleType.DOORS_TO_CLOSE, MemoryModuleType.NEAREST_BED, MemoryModuleType.HURT_BY, MemoryModuleType.HURT_BY_ENTITY, MemoryModuleType.NEAREST_HOSTILE, MemoryModuleType.SECONDARY_JOB_SITE, MemoryModuleType.HIDING_PLACE, MemoryModuleType.HEARD_BELL_TIME, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.LAST_SLEPT, MemoryModuleType.LAST_WOKEN, MemoryModuleType.LAST_WORKED_AT_POI, MemoryModuleType.GOLEM_DETECTED_RECENTLY);
@@ -193,17 +145,7 @@ public class NpcEntity<T> extends TameableEntity{
     }
     @Override
     public ActionResultType mobInteract(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-        Thread t = new Thread(() -> {
-            try {
-                MySQLExample sqlExample = new MySQLExample();
-                //String response = RequestHandler.getAIResponse("�A�{�b�O�@��minecraft�̪�npc�A�ھڥH�U��value�бԭz�X�]�w"+sqlExample.getData()+"�ñԭz�X�A���H��");
-                //p_230254_1_.sendMessage(new StringTextComponent(response),null);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        t.start();
         //testTask(this.getBrain(),p_230254_1_,p_230254_2_);
 //        BlockPos playerPos = player.blockPosition();
 //        Vector3d pl = player.position();
@@ -215,7 +157,7 @@ public class NpcEntity<T> extends TameableEntity{
         if (!this.level.isClientSide()) {
 
 
-            if(msg != ""){
+            //if(msg != ""){
                 //p_230254_1_.sendMessage(new StringTextComponent(msg),null);
                 //p_230254_1_.displayClientMessage(new StringTextComponent("[AIMobs] Error getting response"),true);
                 //System.out.println("NPC " + p_230254_1_.getName() + " click");
@@ -239,7 +181,7 @@ public class NpcEntity<T> extends TameableEntity{
 //                    }
 //                });
 //                t.start();
-            }
+           // }
 
         }
         return ActionResultType.sidedSuccess(this.level.isClientSide);

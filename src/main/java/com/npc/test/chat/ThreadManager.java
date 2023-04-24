@@ -1,4 +1,4 @@
-package com.npc;
+package com.npc.test.chat;
 
 import java.util.concurrent.*;
 

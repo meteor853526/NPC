@@ -14,7 +14,7 @@
  */
 package com.npc.test.server;
 
-import com.npc.test.BubblesConfig;
+import com.npc.test.config.BubblesConfig;
 import com.npc.test.NpcTestMod;
 import com.npc.test.packet.SCSendModPresent;
 import com.npc.test.packet.SCSyncBubbleMessage;

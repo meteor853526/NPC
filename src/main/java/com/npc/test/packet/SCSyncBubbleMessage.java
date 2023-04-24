@@ -10,7 +10,7 @@
 package com.npc.test.packet;
 
 
-import com.npc.test.BubblesConfig;
+import com.npc.test.config.BubblesConfig;
 import com.npc.test.client.ClientBubblesUtil;
 import com.npc.test.util.Bubble;
 import com.npc.test.util.Message;
@@ -19,7 +19,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
-import org.apache.commons.codec.binary.StringUtils;
 
 import java.util.List;
 import java.util.UUID;

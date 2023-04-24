@@ -10,7 +10,7 @@
  *  net.minecraftforge.common.ForgeConfigSpec$IntValue
  *  org.apache.commons.lang3.tuple.Pair
  */
-package com.npc.test;
+package com.npc.test.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;

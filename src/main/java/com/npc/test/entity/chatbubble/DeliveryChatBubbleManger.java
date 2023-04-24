@@ -3,10 +3,12 @@ package com.npc.test.entity.chatbubble;
 
 import com.google.common.collect.Lists;
 import com.npc.test.NpcTestMod;
+import com.npc.test.PlayerChatEvent;
 import com.npc.test.client.resource.pojo.ChatBubbleInfo;
 import com.npc.test.client.resource.pojo.MaidModelInfo;
 import com.npc.test.entity.info.ServerCustomPackLoader;
 import com.npc.test.passive.DeliveryEntity;
+import com.npc.test.passive.NpcEntity;
 import com.npc.test.util.GetJarResources;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.io.IOUtils;
@@ -21,6 +23,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 
+import static com.npc.test.PlayerChatEvent.ChatMsg;
 import static com.npc.test.entity.chatbubble.MaidChatBubbles.EMPTY;
 import static com.npc.test.entity.info.ServerCustomPackLoader.GSON;
 
@@ -124,14 +127,14 @@ public class DeliveryChatBubbleManger {
         return count;
     }
 
-    public static void tick(DeliveryEntity npc) {
-        if(!Objects.equals(DeliveryEntity.replay, "")){
+    public static void tick(DeliveryEntity npc ) {
+        if(!Objects.equals(PlayerChatEvent.ChatReply, "") && ChatMsg.charAt(0) == '@'){
             long offset1 = npc.getUUID().getLeastSignificantBits() % CHECK_RATE;
             checkTimeoutChatBubble(npc);
 //            if ((npc.tickCount + offset1) % CHECK_RATE == 0) {
-//                addMainChatText(npc,DeliveryEntity.replay);
+//                addMainChatText(npc,PlayerChatEvent.ChatReply);
 //            }
-            addMainChatText(npc,DeliveryEntity.replay);
+            addMainChatText(npc,PlayerChatEvent.ChatReply);
         }
 
 
@@ -163,15 +166,15 @@ public class DeliveryChatBubbleManger {
         long currentTimeMillis = System.currentTimeMillis();
         if (bubble1 != EMPTY && currentTimeMillis > bubble1.getLeft()) {
             bubble1 = EMPTY;
-            DeliveryEntity.replay = "";
+            PlayerChatEvent.ChatReply = "";
         }
         if (bubble2 != EMPTY && currentTimeMillis > bubble2.getLeft()) {
             bubble2 = EMPTY;
-            DeliveryEntity.replay = "";
+            PlayerChatEvent.ChatReply = "";
         }
         if (bubble3 != EMPTY && currentTimeMillis > bubble3.getLeft()) {
             bubble3 = EMPTY;
-            DeliveryEntity.replay = "";
+            PlayerChatEvent.ChatReply = "";
         }
         maid.setChatBubble(new MaidChatBubbles(bubble1, bubble2, bubble3));
     }

@@ -2,8 +2,10 @@ package com.npc.test;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.npc.test.client.ClientBubblesUtil;
+import com.npc.test.config.BubblesConfig;
 import com.npc.test.entity.ModEntityTypes;
 import com.npc.test.entity.chatbubble.ChatBubbleManger;
+import com.npc.test.entity.chatbubble.DeliveryChatBubbleManger;
 import com.npc.test.entity.render.DeliveryRenderer;
 import com.npc.test.entity.render.NpcRenderer;
 import com.npc.test.init.InitEntities;
@@ -27,7 +29,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -80,6 +81,7 @@ public class NpcTestMod
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, BubblesConfig.CLIENT_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, BubblesConfig.SERVER_SPEC);
         ChatBubbleManger.initDefaultChat();
+        DeliveryChatBubbleManger.initDefaultChat();
         InitEntities.DATA_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         InitTrigger.init();
 

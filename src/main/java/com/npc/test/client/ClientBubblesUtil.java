@@ -19,7 +19,7 @@ package com.npc.test.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.npc.test.BubblesConfig;
+import com.npc.test.config.BubblesConfig;
 import com.npc.test.util.Bubble;
 import com.npc.test.util.Message;
 

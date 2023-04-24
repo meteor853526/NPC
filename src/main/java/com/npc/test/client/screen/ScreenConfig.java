@@ -24,7 +24,7 @@ package com.npc.test.client.screen;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.npc.test.BubblesConfig;
+import com.npc.test.config.BubblesConfig;
 import com.npc.test.client.ClientBubblesUtil;
 import com.npc.test.util.SpecColor;
 import net.minecraft.client.Minecraft;

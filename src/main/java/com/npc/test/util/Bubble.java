@@ -5,7 +5,7 @@ package com.npc.test.util;
 
 
 
-import com.npc.test.BubblesConfig;
+import com.npc.test.config.BubblesConfig;
 
 import java.util.ArrayDeque;
 import java.util.List;

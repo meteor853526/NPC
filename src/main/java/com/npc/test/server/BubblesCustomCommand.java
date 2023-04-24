@@ -24,7 +24,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
-import com.npc.test.BubblesConfig;
+import com.npc.test.config.BubblesConfig;
 import com.npc.test.NpcTestMod;
 import com.npc.test.packet.SCSyncBubbleMessage;
 import net.minecraft.command.CommandSource;
