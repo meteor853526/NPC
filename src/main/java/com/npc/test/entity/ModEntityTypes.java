@@ -1,6 +1,7 @@
 package com.npc.test.entity;
 
 import com.npc.test.NpcTestMod;
+import com.npc.test.passive.DeliveryEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
@@ -18,6 +19,11 @@ public class ModEntityTypes {
             ENTITY_TYPES.register("npc",
                     () -> EntityType.Builder.<NpcEntity>of(NpcEntity::new, EntityClassification.CREATURE).sized(1f, 1f)
                             .build(new ResourceLocation(NpcTestMod.MOD_ID, "npc").toString()));
+
+    public static final RegistryObject<EntityType<DeliveryEntity>> Delivery_NPC =
+            ENTITY_TYPES.register("delivery",
+                    () -> EntityType.Builder.<DeliveryEntity>of(DeliveryEntity::new, EntityClassification.CREATURE).sized(1f, 1f)
+                            .build(new ResourceLocation(NpcTestMod.MOD_ID, "delivery_npc").toString()));
 
 
 

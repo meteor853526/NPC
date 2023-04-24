@@ -55,15 +55,13 @@ public class RequestHandler {
             HttpPost request = new HttpPost("https://api.openai.com/v1/completions");
             StringEntity params = new StringEntity(data, "UTF-8");
             request.addHeader("Content-Type", "application/json");
-            request.addHeader("Authorization", "Bearer " + "");
+            request.addHeader("Authorization", "Bearer " + "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");
             request.setEntity(params);
             HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();
             String responseString = EntityUtils.toString(entity, "UTF-8");
-            System.out.println(prompt);
-            String temp = new Gson().fromJson(responseString, OpenAIResponse.class).choices[0].text.replace("\r", "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");
-            System.out.println(temp);
-            return temp.replace("\n", " ");
+
+            return new Gson().fromJson(responseString, OpenAIResponse.class).choices[0].text.replace("\r", " ");
         }
     }
 }

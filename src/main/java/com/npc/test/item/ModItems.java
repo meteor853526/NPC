@@ -22,6 +22,10 @@ public class ModItems {
             () -> new ModSpawnEggItem(ModEntityTypes.NPC, 0x464F56, 0x1D6336,
                     new Item.Properties().tab(ModItemGroup.TUTORIAL_GROUP)));
 
+    public static final RegistryObject<ModSpawnEggItem> Delivery_SPAWN_EGG = ITEMS.register("delivery_npc_spawn_egg",
+            () -> new ModSpawnEggItem(ModEntityTypes.Delivery_NPC, 0x464F56, 0x1D6336,
+                    new Item.Properties().tab(ModItemGroup.TUTORIAL_GROUP)));
+
 
 
     public static void register(IEventBus eventBus) {

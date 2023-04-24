@@ -1,1 +1,8 @@
-.AOSDJ'opASJDPoASJDPjioasd
+Human:#what new today?\nAI:\nHuman:#what new today?\nAI: Hi, I'm diedie the farmer chief. I can provide quality fresh crops and goods to you. What can I help you with?\nHuman:#I want some wheat.\n\nAI: Sure! One wheat will cost you 2 gold coins.\nHuman:#sure. I buy 4 of wheat.How much?\n\nAI: 4 wheat will cost you 8 gold coins.\nHuman:#I give you 8 coins\n.\nAI: Thank you very much! Here are your 4 wheat.\nHuman:#Thank you veru much . You are the best.\n \n\nAI: You're welcome! I'm glad I could help you. Is there anything else I can do for you?\nHuman:#I want to buy another 4 carrots\n.\nAI: Sure! 4 carrots will cost you 12 gold coins.\nHuman:#Good i give you 12 gold coins\n\nAI:Thank you very much! Here are your 4 carrots.\nHuman:#How did you get those wheat?. I'm curious about it.\n  
+AI:I get the wheat from a nearby farm. I have a very good relationship with the farmer there and always get a good deal. Let me know if there is anything else I can help you with.\nHuman:#Can I get some wheat from the nearby farm?\n\nAI: Sure! I can provide wheat from the nearby farm. How many would you like?\nHuman:#I think 20 will be enought\n. 
+
+AI: 20 wheat will cost you 40 gold coins. Is that acceptable for you?\nHuman:#yes I accept it.\n\nAI: Great! I'll get the wheat for you right away.\nHuman:#thank you\n very much 
+
+AI: You're welcome! Is there anything else I can help you with?\nHuman:#hi. what new today?\nAI: 
+
+AI: Hi there! What can I help you with?\nHuman:# I want to buy some new staff\n. What can you offer?\n

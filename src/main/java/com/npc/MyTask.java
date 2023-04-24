@@ -56,25 +56,35 @@ public class MyTask implements Runnable {
                     if (!Objects.equals(setting, "")) {
 
                         System.out.println("?????????????????????????????????????");
-                        String response = RequestHandler.getAIResponse("You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! . Then is your character setting " + setting + "And this the record we talked before " + chatRecord + "If record show nothing which mean this is the first time we met .There is the current message: " + event.getMessage());
+
+                        String response = RequestHandler.getAIResponse("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "
+                                + setting + "And this the record we talked before " + chatRecord
+                                + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met .There is the current message: "
+                                + event.getMessage().replace("#"," "));
+
+
+
                         System.out.println("You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! . " +
                                 "Then is your character setting " + setting + "And this the record we talked before "
                                 + chatRecord + "If record show nothing which mean this is the first time we met ." +
                                 "There is the current message: " + event.getMessage());
-                        JSONObject chatjsonObject = new JSONObject(PlayerChatEvent.chatRecord);
-
-                        JSONObject temp = new JSONObject();
-
-                        temp.put("Human:", event.getMessage());
-                        temp.put("AI", response);
-
-
-                        chatjsonObject.put("chat flow(" + taskId + ")", temp);
+                        //JSONObject chatjsonObject = new JSONObject(PlayerChatEvent.chatRecord);
+//                        JSONObject temp = new JSONObject();
+//
+//                        temp.put("Human:", event.getMessage());
+//                        temp.put("AI", response);
+                        //chatjsonObject.put("chat flow(" + taskId + ")", temp);
 
                         try {
                             FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\ChatRecord.txt",true);         // writing back to the file
-                            fileWriter.write("Human:"+ event.getMessage());
-                            fileWriter.write("AI:"+ response);
+                            fileWriter.write("Human:"+ event.getMessage().replace("Hi there! I'm Diedie, the farmer chief. It looks like we haven't talked before. For 1 carrot it costs 3 gold coins, 1 wheat costs 2 gold coins and 1 beetroot is 5 gold coins.", " ") +"\\n");
+
+                            if (taskId == 0 ){
+                                fileWriter.write( "diedie:"+response +"\\n");
+                            }else{
+                                fileWriter.write( response +"\\n");
+                            }
+
                             fileWriter.flush();
                         } catch (Exception e) {
                             e.printStackTrace();

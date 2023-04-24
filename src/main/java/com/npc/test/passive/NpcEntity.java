@@ -95,6 +95,7 @@ public class NpcEntity<T> extends TameableEntity{
     public static final String MODEL_ID_TAG = "ModelId";
     public static long lastRequest = 0;
     public static String msg = "";
+
     public static BlockPos pos = null;
     public static String replay = "";
 
@@ -122,8 +123,6 @@ public class NpcEntity<T> extends TameableEntity{
         this.goalSelector.addGoal(1,new LookAtGoal(this,PlayerEntity.class,1.0F));
 
     }
-
-
 
     @Override
     @SuppressWarnings("all")

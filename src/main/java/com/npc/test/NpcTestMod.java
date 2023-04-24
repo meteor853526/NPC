@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.npc.test.client.ClientBubblesUtil;
 import com.npc.test.entity.ModEntityTypes;
 import com.npc.test.entity.chatbubble.ChatBubbleManger;
+import com.npc.test.entity.render.DeliveryRenderer;
 import com.npc.test.entity.render.NpcRenderer;
 import com.npc.test.init.InitEntities;
 import com.npc.test.init.InitTrigger;
@@ -94,6 +95,7 @@ public class NpcTestMod
         event.enqueueWork(() ->
         {
             GlobalEntityTypeAttributes.put(ModEntityTypes.NPC.get(), NpcEntity.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(ModEntityTypes.Delivery_NPC.get(), NpcEntity.setCustomAttributes().build());
         });
         int index = 0;
         channel.registerMessage(index++, SCSendModPresent.class, SCSendModPresent::encode, SCSendModPresent::decode, SCSendModPresent::handle);
@@ -129,6 +131,7 @@ public class NpcTestMod
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.NPC.get(), NpcRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.Delivery_NPC.get(), DeliveryRenderer::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

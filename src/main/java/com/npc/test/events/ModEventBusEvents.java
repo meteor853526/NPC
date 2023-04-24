@@ -3,6 +3,7 @@ package com.npc.test.events;
 import com.npc.test.NpcTestMod;
 import com.npc.test.entity.ModEntityTypes;
 import com.npc.test.item.custom.ModSpawnEggItem;
+import com.npc.test.passive.DeliveryEntity;
 import com.npc.test.passive.NpcEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraftforge.event.RegistryEvent;
@@ -16,8 +17,10 @@ public class ModEventBusEvents {
     @SubscribeEvent
     public static void addEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.NPC.get(), NpcEntity.setCustomAttributes().build());
-
+        event.put(ModEntityTypes.Delivery_NPC.get(), DeliveryEntity.setCustomAttributes().build());
     }
+
+
 
     @SubscribeEvent
     public static void onRegisterEntities(RegistryEvent.Register<EntityType<?>> event) {

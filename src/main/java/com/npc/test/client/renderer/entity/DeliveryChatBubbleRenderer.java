@@ -9,9 +9,7 @@ import com.npc.test.entity.chatbubble.ChatBubbleManger;
 import com.npc.test.entity.chatbubble.ChatText;
 import com.npc.test.entity.chatbubble.MaidChatBubbles;
 import com.npc.test.entity.render.DeliveryRenderer;
-import com.npc.test.entity.render.NpcRenderer;
 import com.npc.test.passive.DeliveryEntity;
-import com.npc.test.passive.NpcEntity;
 import com.npc.test.util.ParseI18n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -30,14 +28,14 @@ import org.lwjgl.opengl.GL11;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ChatBubbleRenderer {
+public class DeliveryChatBubbleRenderer {
     private static final List<Pair<Long, ChatText>> TMP_CHAT_BUBBLES = Lists.newArrayList();
     private static final RenderState.AlphaState DEFAULT_ALPHA = new RenderState.AlphaState(0.003921569F);
     private static final String LEFT_ARROW = "left_arrow";
     private static final String MIDDLE_ARROW = "middle_arrow";
     private static final String RIGHT_ARROW = "right_arrow";
 
-    public static void renderChatBubble(NpcRenderer renderer, NpcEntity maid, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
+    public static void renderChatBubble(DeliveryRenderer renderer, DeliveryEntity maid, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         double distance = renderer.getDispatcher().distanceToSqr(maid);
         if (ForgeHooksClient.isNameplateInRenderDistance(maid, distance)) {
             getTmpChatBubbles(maid);
@@ -166,7 +164,7 @@ public class ChatBubbleRenderer {
         }
     }
 
-    private static float getChatBubbleStartHeight(NpcRenderer renderer, NpcEntity maid) {
+    private static float getChatBubbleStartHeight(DeliveryRenderer renderer, DeliveryEntity maid) {
         float height = maid.getBbHeight() + 0.75F;
         //if (renderer.getModel().hasHead()) {
             height = (24 - renderer.getModel().getHead().y) * 0.0625F + 0.75F;
@@ -174,7 +172,7 @@ public class ChatBubbleRenderer {
         return height;
     }
 
-    private static void getTmpChatBubbles(NpcEntity maid) {
+    private static void getTmpChatBubbles(DeliveryEntity maid) {
         MaidChatBubbles chatBubble = maid.getChatBubble();
         Pair<Long, ChatText> bubble1 = chatBubble.getBubble1();
         Pair<Long, ChatText> bubble2 = chatBubble.getBubble2();
@@ -267,13 +265,13 @@ public class ChatBubbleRenderer {
     }
 
     private static class RenderData {
-        private final NpcRenderer renderer;
-        private final NpcEntity maid;
+        private final DeliveryRenderer renderer;
+        private final DeliveryEntity maid;
         private final MatrixStack matrixStack;
         private final IRenderTypeBuffer buffer;
         private final String arrow;
 
-        public RenderData(NpcRenderer renderer, NpcEntity maid, MatrixStack matrixStack, IRenderTypeBuffer buffer, String arrow) {
+        public RenderData(DeliveryRenderer renderer, DeliveryEntity maid, MatrixStack matrixStack, IRenderTypeBuffer buffer, String arrow) {
             this.renderer = renderer;
             this.maid = maid;
             this.matrixStack = matrixStack;
