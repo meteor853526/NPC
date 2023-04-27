@@ -16,6 +16,7 @@ import com.npc.test.packet.SCSyncBubbleMessage;
 import com.npc.test.passive.NpcEntity;
 
 import com.npc.test.server.BubblesCustomCommand;
+import com.npc.test.trade.ItemRegistry;
 import com.npc.test.util.ResetUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -64,6 +65,7 @@ public class NpcTestMod
 
         ModEntityTypes.register(eventBus);
         ModItems.register(eventBus);
+        ItemRegistry.ITEMS.register(eventBus);
 
         eventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
