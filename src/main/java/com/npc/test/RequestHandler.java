@@ -1,7 +1,6 @@
 package com.npc.test;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -11,7 +10,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class RequestHandler {
 
@@ -55,7 +53,7 @@ public class RequestHandler {
             HttpPost request = new HttpPost("https://api.openai.com/v1/completions");
             StringEntity params = new StringEntity(data, "UTF-8");
             request.addHeader("Content-Type", "application/json");
-            request.addHeader("Authorization", "Bearer " + "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");
+            request.addHeader("Authorization", "Bearer " + "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");
             request.setEntity(params);
             HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();

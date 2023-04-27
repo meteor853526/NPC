@@ -9,15 +9,17 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.apache.commons.io.FileUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.*;
-
-import org.apache.commons.io.FileUtils;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
 @Mod.EventBusSubscriber(modid = NpcTestMod.MOD_ID)
@@ -65,8 +67,8 @@ public class PlayerChatEvent {
         System.out.println(event);
 
 
-        Path CharRecordPath = Paths.get("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt");
-        String NpcSettingPath = "C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
+        Path CharRecordPath = Paths.get("C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt");
+        String NpcSettingPath = "C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
         if(ChatMsg.charAt(0) == '#') {
             lastRequest = System.currentTimeMillis();
             File file = new File(NpcSettingPath);
