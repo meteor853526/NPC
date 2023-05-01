@@ -30,7 +30,7 @@ public class NpcContainer extends Container {
         this.target= inventory.target;
         
         this.addSlot(new Slot(this.inventory, 0, 39, 49));
-        this.addSlot(new Slot(this.inventory, 1, 66, 49));
+       // this.addSlot(new Slot(this.inventory, 1, 66, 49));
         this.addSlot(new Slot(this.inventory, 2, 126, 49) {
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -41,7 +41,7 @@ public class NpcContainer extends Container {
             public ItemStack onTake(PlayerEntity p_190901_1_, ItemStack p_190901_2_) {
                 this.checkTakeAchievements(p_190901_2_);
                 ItemStack itemstack = NpcContainer.this.inventory.getItem(0);
-                ItemStack itemstack1 = NpcContainer.this.inventory.getItem(1);
+               // ItemStack itemstack1 = NpcContainer.this.inventory.getItem(1);
                 // 交易完成後扣除付款邏輯
                 NpcContainer.this.setItem(0, ItemStack.EMPTY);
                 NpcContainer.this.setItem(1, ItemStack.EMPTY);
