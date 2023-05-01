@@ -1,64 +1,66 @@
 package com.npc.test.trade;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.npc.test.NpcTestMod;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.OptionSlider;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.settings.SliderPercentageOption;
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.inventory.Inventory;
 
-public class NpcGui extends Screen {
-    TextFieldWidget textFieldWidget;
-    Button button;
-    OptionSlider optionSlider;
-    ResourceLocation NPC_TEXTURE = new ResourceLocation(NpcTestMod.MOD_ID,"textures/gui/container.png");
-    String content = "Hello";
-    SliderPercentageOption sliderPercentageOption;
-    Widget sliderBar;
+public class NpcGui extends ContainerScreen<NpcContainer> {
 
-    protected NpcGui(ITextComponent titleIn) {
-        super(titleIn);
-    }
-
+	private static final ResourceLocation TEXTURE = new ResourceLocation(NpcTestMod.MOD_ID,
+            "textures/gui/trade_gui.png");
+	Slot target, source;
+	Inventory fakeInventory;
+	public NpcGui(NpcContainer npcContainer, PlayerInventory playerInventory, ITextComponent title) {
+	    super(npcContainer, playerInventory, title);
+	    fakeInventory = new Inventory(2);
+	    fakeInventory.addItem(npcContainer.source.copy());
+	    fakeInventory.addItem(npcContainer.target.copy());
+	    this.source = new Slot(fakeInventory, 0, 39, 21);
+	    this.target = new Slot(fakeInventory, 1, 126, 21);
+	    
+	}
+	public static final Logger LOGGER = LogManager.getLogger();
     @Override
-    protected void init() {
-//        keyboardListener.enableRepeatEvents => keyboardHandler.setSendRepeatsToGui
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.textFieldWidget = new TextFieldWidget(this.font, this.width / 2 - 100, 66, 200, 20, ITextComponent.nullToEmpty("title"));
-        this.children.add(this.textFieldWidget);
-        this.button = new Button(this.width / 2 - 40, 96, 80, 20, ITextComponent.nullToEmpty("save"),(button) -> {
-        });
-        this.addButton(button);
-
-        this.sliderPercentageOption = new SliderPercentageOption("npctestmod.sliderbar", 5, 100, 5, (setting) -> {
-            return Double.valueOf(0);
-        }, (setting, value) -> {
-        }, (gameSettings, sliderPercentageOption1) -> ITextComponent.nullToEmpty("test"));
-        this.sliderBar = this.sliderPercentageOption.createButton(Minecraft.getInstance().options, this.width / 2 - 100, 120, 200);
-        this.children.add(this.sliderBar);
-
-        super.init();
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    	this.renderBackground(stack);
+    	super.render(stack, mouseX, mouseY, partialTicks);
+    	// 交易物品預覽
+    	RenderSystem.pushMatrix();
+    	RenderSystem.translatef((float)this.leftPos, (float)this.topPos, 0.0F);
+    	this.setBlitOffset(100);
+    	this.itemRenderer.renderAndDecorateItem(source.getItem(), source.x, source.y);
+    	this.itemRenderer.renderGuiItemDecorations(this.font, source.getItem(), source.x, source.y);
+    	this.itemRenderer.renderAndDecorateItem(target.getItem(), target.x, target.y);
+    	this.itemRenderer.renderGuiItemDecorations(this.font, target.getItem(), target.x, target.y);
+    	this.setBlitOffset(0);
+    	if(this.isHovering(source.x, source.y, 16, 16, mouseX, mouseY))
+    		this.hoveredSlot = source;
+    	if(this.isHovering(target.x, target.y, 16, 16, mouseX, mouseY))
+    		this.hoveredSlot = target;
+    	RenderSystem.popMatrix();
+    	this.renderTooltip(stack, mouseX, mouseY);
     }
+    
+	@Override
+	protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
+		if (minecraft == null) {
+			return;
+		}
+		RenderSystem.color4f(1, 1, 1, 1);
+        minecraft.getTextureManager().bind(TEXTURE);
+        int posX = (this.width - this.imageWidth) / 2;
+        int posY = (this.height - this.imageHeight) / 2;
 
-    @Override
-    public void render(MatrixStack pose, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(pose);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(NPC_TEXTURE);
-        int textureWidth = 208;
-        int textureHeight = 156;
-        this.blit(pose,this.width / 2 - 150, 10, 0, 0, 300, 200, textureWidth, textureHeight);
-        this.drawString(pose,this.font, content, this.width / 2 - 10, 30, 0xeb0505);
-
-        this.textFieldWidget.render(pose,mouseX, mouseY, partialTick);
-        this.button.render(pose,mouseX, mouseY, partialTick);
-        this.sliderBar.render(pose,mouseX, mouseY, partialTick);
-        super.render(pose,mouseX, mouseY, partialTick);
-    }
+        blit(matrixStack, posX, posY, 0, 0, this.imageWidth, this.imageHeight);
+	}
 }

@@ -3,6 +3,7 @@ package com.npc.test;
 import com.mojang.brigadier.CommandDispatcher;
 import com.npc.test.client.ClientBubblesUtil;
 import com.npc.test.config.BubblesConfig;
+import com.npc.test.container.ModContainerTypes;
 import com.npc.test.entity.ModEntityTypes;
 import com.npc.test.entity.chatbubble.ChatBubbleManger;
 import com.npc.test.entity.chatbubble.DeliveryChatBubbleManger;
@@ -64,6 +65,7 @@ public class NpcTestMod
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModEntityTypes.register(eventBus);
+        ModContainerTypes.register(eventBus);
         ModItems.register(eventBus);
         ItemRegistry.ITEMS.register(eventBus);
 
@@ -108,6 +110,7 @@ public class NpcTestMod
 
     @SubscribeEvent
     public static void setupClient(FMLClientSetupEvent event) {
+    	ModContainerTypes.registerScreens(event);
         ClientBubblesUtil.registerBindings();
         if (((List)BubblesConfig.CLIENT.colorOutline.get()).isEmpty() || ((List)BubblesConfig.CLIENT.colorInside.get()).isEmpty() || ((List)BubblesConfig.CLIENT.colorText.get()).isEmpty()) {
             ResetUtil.resetColors();
