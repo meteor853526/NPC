@@ -67,8 +67,8 @@ public class PlayerChatEvent {
         System.out.println(event);
 
 
-        Path CharRecordPath = Paths.get("C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt");
-        String NpcSettingPath = "C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
+        Path CharRecordPath = Paths.get("C:\\project_test\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt");
+        String NpcSettingPath = "C:\\project_test\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
         if(ChatMsg.charAt(0) == '#') {
             lastRequest = System.currentTimeMillis();
             File file = new File(NpcSettingPath);
