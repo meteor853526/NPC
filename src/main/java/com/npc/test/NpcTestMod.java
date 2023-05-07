@@ -11,6 +11,7 @@ import com.npc.test.entity.render.NpcRenderer;
 import com.npc.test.init.InitEntities;
 import com.npc.test.init.InitTrigger;
 import com.npc.test.item.ModItems;
+import com.npc.test.network.NetworkHandler;
 import com.npc.test.packet.SCSendModPresent;
 import com.npc.test.packet.SCSyncBubbleMessage;
 import com.npc.test.passive.NpcEntity;
@@ -27,6 +28,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -82,7 +84,10 @@ public class NpcTestMod
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, BubblesConfig.SERVER_SPEC);
         ChatBubbleManger.initDefaultChat();
         DeliveryChatBubbleManger.initDefaultChat();
+        DeferredWorkQueue.runLater(NetworkHandler::init);
         InitEntities.DATA_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        InitEntities.MEMORY_MODULE_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        InitEntities.SENSOR_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         InitTrigger.init();
 
 

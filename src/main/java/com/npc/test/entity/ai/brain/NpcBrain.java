@@ -10,6 +10,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.RecordBuilder;
+import com.npc.test.entity.ai.brain.task.MaidPickupEntitiesTask;
 import com.npc.test.entity.ai.brain.task.WalkToTargetTask;
 import com.npc.test.init.InitEntities;
 
@@ -53,7 +54,8 @@ public final class NpcBrain extends BrainUtil {
     public static ImmutableList<SensorType<? extends Sensor<? super NpcEntity>>> getSensorTypes() {
         return ImmutableList.of(
                 SensorType.NEAREST_LIVING_ENTITIES,
-                SensorType.HURT_BY
+                SensorType.HURT_BY,
+                InitEntities.MAID_PICKUP_ENTITIES_SENSOR.get()
 //                InitEntities.MAID_HOSTILES_SENSOR.get(),
 //                InitEntities.MAID_PICKUP_ENTITIES_SENSOR.get()
         );
@@ -96,13 +98,14 @@ public final class NpcBrain extends BrainUtil {
 //        Pair<Integer, Task<? super EntityMaid>> maidAwait = Pair.of(1, new MaidAwaitTask());
         Pair<Integer, Task<? super NpcEntity>> interactWithDoor = Pair.of(2, new InteractWithDoorTask());
         Pair<Integer, Task<? super NpcEntity>> walkToTarget = Pair.of(2, new WalkToTargetTask());
+        Pair<Integer, Task<? super NpcEntity>> pickupItem = Pair.of(10, new MaidPickupEntitiesTask(NpcEntity::isPickup, 8, 0.6f));
 //        Pair<Integer, Task<? super EntityMaid>> followOwner = Pair.of(3, new MaidFollowOwnerTask(0.5f, 8, 2));
 //        Pair<Integer, Task<? super EntityMaid>> pickupItem = Pair.of(10, new MaidPickupEntitiesTask(EntityMaid::isPickup, 8, 0.6f));
 //        Pair<Integer, Task<? super EntityMaid>> maidReturnHome = Pair.of(20, new MaidReturnHomeTask(0.5f));
 //        Pair<Integer, Task<? super EntityMaid>> clearSleep = Pair.of(99, new MaidClearSleepTask());
 
         //brain.addActivity(Activity.CORE, ImmutableList.of(swim, look, maidPanic, maidAwait, interactWithDoor, walkToTarget, followOwner, pickupItem, maidReturnHome, clearSleep));
-        brain.addActivity(Activity.CORE, ImmutableList.of(swim, look, interactWithDoor, walkToTarget));
+        brain.addActivity(Activity.CORE, ImmutableList.of(swim, look, interactWithDoor, walkToTarget,pickupItem));
     }
 
     private static void registerIdleGoals(Brain<NpcEntity> brain) {
