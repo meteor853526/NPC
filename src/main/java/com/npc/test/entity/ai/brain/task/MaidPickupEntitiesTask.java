@@ -43,6 +43,7 @@ public class MaidPickupEntitiesTask extends Task<NpcEntity> {
                 .filter(e -> e.closerThan(maid, maxDistToWalk) && e.isAlive() && !e.isInWater())
                 .filter(maid::canPathReach).findFirst()
                 .ifPresent(e -> BrainUtil.setWalkAndLookTargetMemories(maid, e, this.speedModifier, 0));
+        System.out.println("?????????");
     }
 
     private List<Entity> getItems(NpcEntity maid) {

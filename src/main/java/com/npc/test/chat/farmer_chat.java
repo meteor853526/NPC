@@ -2,7 +2,9 @@ package com.npc.test.chat;
 
 import com.npc.test.PlayerChatEvent;
 import com.npc.test.RequestHandler;
+import com.npc.test.passive.NpcEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ServerChatEvent;
@@ -10,6 +12,8 @@ import net.minecraftforge.event.ServerChatEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class farmer_chat implements Runnable {
     private int taskId;
@@ -40,7 +44,7 @@ public class farmer_chat implements Runnable {
         System.out.println("Task " + taskId + " is running on thread " + Thread.currentThread().getName());
 
             try {
-                while (true) {
+
 //                    PlayerEntity player = Minecraft.getInstance().player;
                     tick = Minecraft.getInstance().level.getDayTime();
                     System.out.println("TICK:"+tick);
@@ -146,9 +150,27 @@ public class farmer_chat implements Runnable {
                         System.out.println(response);
                         PlayerChatEvent.ChatReply = response;
                         event.getPlayer().sendMessage(new StringTextComponent("#:"+response), event.getPlayer().getUUID());
-                        break;
+                        if(!Objects.equals(PlayerChatEvent.ChatMsg, "")){
+                            String regex ="[-]?\\d*";
+                            Pattern p = Pattern.compile(regex);
+                            Matcher m = p.matcher(PlayerChatEvent.ChatMsg);
+                            int[] arr = new int[3];
+                            System.out.println();
+                            //arr[0] = arr[1] = arr[2] = 0;
+                            int count = 0;
+                            while (m.find()) {
+                                if (!"".equals(m.group())){
+                                    System.out.println("come here:"+ m.group());
+                                    arr[count++] = Integer.parseInt(m.group());
+                                }
+                            }
+                            NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
+                            NpcEntity.taskID = 1;
+                            System.out.println(NpcEntity.taskID);
+                        }
+
                     }
-                }
+
                 Thread.sleep(1000);
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);

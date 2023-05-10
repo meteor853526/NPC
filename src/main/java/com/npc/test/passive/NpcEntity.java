@@ -3,10 +3,12 @@ package com.npc.test.passive;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
 import com.npc.test.entity.ai.brain.NpcBrain;
+import com.npc.test.entity.ai.brain.task.ShareItemsTask;
 import com.npc.test.entity.chatbubble.ChatBubbleManger;
 import com.npc.test.entity.chatbubble.ChatText;
 import com.npc.test.entity.chatbubble.MaidChatBubbles;
 
+import com.npc.test.init.InitEntities;
 import com.npc.test.init.InitItems;
 import com.npc.test.inventory.container.MaidConfigContainer;
 import com.npc.test.inventory.container.MaidMainContainer;
@@ -20,6 +22,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.BrainUtil;
+import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.brain.memory.WalkTarget;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
@@ -33,6 +36,7 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItem;
@@ -75,6 +79,8 @@ public class NpcEntity<T> extends TameableEntity{
     private int backpackDelay = 0;
     private final ItemStackHandler maidInv = new MaidBackpackHandler(36);
     public boolean guiOpening = false;
+
+    public static PlayerEntity me;
     public static final String BACKPACK_LEVEL_TAG = "MaidBackpackLevel";
     private static final String PICKUP_TAG = "MaidIsPickup";
     private static final DataParameter<Integer> DATA_BACKPACK_LEVEL = EntityDataManager.defineId(NpcEntity.class, DataSerializers.INT);
@@ -87,6 +93,11 @@ public class NpcEntity<T> extends TameableEntity{
     private static final DataParameter<MaidChatBubbles> CHAT_BUBBLE = EntityDataManager.defineId(NpcEntity.class, MaidChatBubbles.DATA);
     private static final DataParameter<String> DATA_MODEL_ID = EntityDataManager.defineId(NpcEntity.class, DataSerializers.STRING);
     private static final String DEFAULT_MODEL_ID = "touhou_little_maid:hakurei_reimu";
+
+    private final Inventory inventory = new Inventory(8);
+
+    public static int taskID=0;
+
     public NpcEntity(EntityType<? extends NpcEntity> type, World world) {
         super(type, world);
         ((GroundPathNavigator) this.getNavigation()).setCanOpenDoors(true);
@@ -143,14 +154,17 @@ public class NpcEntity<T> extends TameableEntity{
     public void tick() {
         super.tick();
 
-        if(pos != null){
-
-            BrainUtil.setWalkAndLookTargetMemories((LivingEntity) this.getEntity(),pos,1,1);
+        //this.getBrain().setMemory(InitEntities.PICKUP.get(),false);
+//        this.getBrain().setMemory(InitEntities.SERVICE_CHECK.get(),true);
+//        this.getBrain().setMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER,me);
+        if(taskID == 1){
+ //           BrainUtil.setWalkAndLookTargetMemories((LivingEntity) this.getEntity(),pos,1,1);
             this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
-            //pos = null;
-            //System.out.println(replay);
 
+        }else if (taskID == 2){
+            this.getBrain().setMemory(InitEntities.PICKUP.get(),true);
         }
+        //testTask();
     }
     @Override
     public void baseTick() {
@@ -166,14 +180,23 @@ public class NpcEntity<T> extends TameableEntity{
         ChatBubbleManger.tick(this);
     }
 
-    public ActionResultType testTask(Brain<VillagerEntity> villagerBrain,PlayerEntity p_230254_1_, Hand p_230254_2_){
-        //npc.getBrain().setMemory(InitEntities.TARGET_POS.get(), new BlockPosWrapper(pos));
-        //this.moveTo(pos,100,100);
-        villagerBrain.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(pos, 120, 120));
-        new WalkToTargetTask(120,120);
-        //villagerBrain.addActivity(WalkToTargetTask());
+    public ActionResultType testTask(){
+
+        if(taskID == 1){
+            this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
+        }
+
+
+//        //npc.getBrain().setMemory(InitEntities.TARGET_POS.get(), new BlockPosWrapper(pos));
+//        //this.moveTo(pos,100,100);
+//        villagerBrain.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(pos, 120, 120));
+//        new WalkToTargetTask(120,120);
+//        //villagerBrain.addActivity(WalkToTargetTask());
         return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
+
+
+
 
     @Override
     public ActionResultType mobInteract(PlayerEntity p_230254_1_, Hand p_230254_2_) {
@@ -187,6 +210,7 @@ public class NpcEntity<T> extends TameableEntity{
 //            this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
 //        }
         openMaidGui(p_230254_1_);
+        me = p_230254_1_;
         if (!this.level.isClientSide()) {
 
 
@@ -223,6 +247,7 @@ public class NpcEntity<T> extends TameableEntity{
     @Override
     protected void pushEntities() {
         super.pushEntities();
+
         List<Entity> entityList = this.level.getEntities(this,
                 this.getBoundingBox().inflate(0.5, 0, 0.5), this::canPickup);
         if (!entityList.isEmpty() && this.isAlive()) {
@@ -230,6 +255,7 @@ public class NpcEntity<T> extends TameableEntity{
                 // 如果是物品
                 if (entityPickup instanceof ItemEntity) {
                     pickupItem((ItemEntity) entityPickup, false);
+
                 }
 //                // 如果是经验
 //                if (entityPickup instanceof ExperienceOrbEntity) {
@@ -279,31 +305,29 @@ public class NpcEntity<T> extends TameableEntity{
         this.entityData.set(DATA_PICKUP, isPickup);
     }
     public boolean canPickup(Entity pickupEntity, boolean checkInWater) {
-        if (isPickup()) {
-            if (checkInWater && pickupEntity.isInWater()) {
-                return false;
-            }
-            if (pickupEntity instanceof ItemEntity) {
-                return pickupItem((ItemEntity) pickupEntity, true);
-            }
-//            if (pickupEntity instanceof AbstractArrowEntity) {
-//                return pickupArrow((AbstractArrowEntity) pickupEntity, true);
-//            }
-//            if (pickupEntity instanceof ExperienceOrbEntity) {
-//                return true;
-//            }
-//            return pickupEntity instanceof EntityPowerPoint;
-        }
-        return false;
+
+        return taskID != 2;
     }
     public boolean canPickup(Entity pickupEntity) {
+
         return canPickup(pickupEntity, false);
     }
     public boolean pickupItem(ItemEntity entityItem, boolean simulate) {
         ItemStack itemstack = entityItem.getItem();
-        this.onItemPickup(entityItem);
+        boolean flag = inventory.canAddItem(itemstack);
+        if (!flag) {
+            return false;
+        }
         //this.setItemSlot(equipmentslottype, itemstack);
+        this.onItemPickup(entityItem);
         this.take(entityItem, itemstack.getCount());
+        System.out.println(itemstack.getCount());
+        ItemStack itemstack1 = inventory.addItem(itemstack);
+        if (itemstack1.isEmpty()) {
+            entityItem.remove();
+        } else {
+            itemstack.setCount(itemstack1.getCount());
+        }
         return true;
 
 //        if (!level.isClientSide && entityItem.isAlive() && !entityItem.hasPickUpDelay()) {
@@ -343,6 +367,9 @@ public class NpcEntity<T> extends TameableEntity{
 //            return true;
 //        }
 //        return false;
+    }
+    public Inventory getInventory() {
+        return this.inventory;
     }
 
     public boolean openMaidGui(PlayerEntity player) {

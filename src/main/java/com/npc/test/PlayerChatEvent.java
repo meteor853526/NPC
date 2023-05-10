@@ -5,6 +5,7 @@ import com.npc.test.chat.ThreadManager;
 import com.npc.test.chat.delivery_chat;
 import com.npc.test.chat.farmer_chat;
 import com.npc.test.passive.NpcEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,9 +18,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Mod.EventBusSubscriber(modid = NpcTestMod.MOD_ID)
@@ -53,12 +57,12 @@ public class PlayerChatEvent {
 //    }
     @SubscribeEvent
     public static void BlockLeftClickEvent(PlayerInteractEvent.LeftClickBlock event) {
-        String tool = String.valueOf(event.getPlayer().getMainHandItem());
-        System.out.println("?" + tool + "?");
-        if(tool.equals("1 diamond_sword")){
-            System.out.println(event.getPos());
-            NpcEntity.pos = event.getPos();
-        }
+//        String tool = String.valueOf(event.getPlayer().getMainHandItem());
+//        System.out.println("?" + tool + "?");
+//        if(tool.equals("1 diamond_sword")){
+//            System.out.println(event.getPos());
+//            NpcEntity.pos = event.getPos();
+//        }
 
     }
     @SubscribeEvent
@@ -71,6 +75,8 @@ public class PlayerChatEvent {
 //        String NpcSettingPath = "C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
         Path CharRecordPath = Paths.get("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt");
         String NpcSettingPath = "C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
+
+        if(ChatMsg.charAt(0) == '!')NpcEntity.taskID = 2;
         if(ChatMsg.charAt(0) == '#') {
             lastRequest = System.currentTimeMillis();
             File file = new File(NpcSettingPath);
@@ -104,9 +110,10 @@ public class PlayerChatEvent {
 //                    System.out.println(response);
 //                    NpcEntity.replay = response;
 //                    event.getPlayer().sendMessage(new StringTextComponent("ChatGPT: " + response), event.getPlayer().getUUID());
+
 //                    String regex ="[-]?\\d*";
 //                    Pattern p = Pattern.compile(regex);
-//                    Matcher m = p.matcher(msg);
+//                    Matcher m = p.matcher(PlayerChatEvent.ChatReply);
 //                    int[] arr = new int[3];
 //                    //arr[0] = arr[1] = arr[2] = 0;
 //                    int count = 0;
@@ -117,13 +124,15 @@ public class PlayerChatEvent {
 //                        }
 //                    }
 //                    NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
-//
+
 //                } catch (Exception e) {
 //                    e.printStackTrace();
 //                }
 //            });
 //            t.start();
             threadManager.execute(new farmer_chat(count++,event,settingContent,chatRecord));
+
+
 //            if(threadManager.getActCount() < 1 ){
 //                threadManager.execute(task);
 //            }else{

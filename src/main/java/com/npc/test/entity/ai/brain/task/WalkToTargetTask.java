@@ -40,12 +40,14 @@ public class WalkToTargetTask extends Task<MobEntity> {
    }
 
    protected boolean checkExtraStartConditions(ServerWorld worldIn, MobEntity owner) {
+
       if (this.remainingCooldown > 0) {
          --this.remainingCooldown;
          return false;
       } else {
          Brain<?> brain = owner.getBrain();
          WalkTarget walktarget = brain.getMemory(WALK_TARGET).get();
+
          boolean flag = this.reachedTarget(owner, walktarget);
          if (!flag && this.tryComputePath(owner, walktarget, worldIn.getGameTime())) {
             this.lastTargetPos = walktarget.getTarget().currentBlockPosition();
@@ -53,7 +55,10 @@ public class WalkToTargetTask extends Task<MobEntity> {
          } else {
             brain.eraseMemory(WALK_TARGET);
             if (flag) {
+
                brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+               System.out.println(this.getStatus());
+               NpcEntity.taskID = 0;
             }
 
             return false;
@@ -80,6 +85,8 @@ public class WalkToTargetTask extends Task<MobEntity> {
       entityIn.getNavigation().stop();
       entityIn.getBrain().eraseMemory(WALK_TARGET);
       entityIn.getBrain().eraseMemory(MemoryModuleType.PATH);
+      //NpcEntity.pos = null;
+
       this.path = null;
    }
 
@@ -87,6 +94,7 @@ public class WalkToTargetTask extends Task<MobEntity> {
 
       entityIn.getBrain().setMemory(MemoryModuleType.PATH, this.path);
       entityIn.getNavigation().moveTo(this.path, (double)this.speedModifier);
+
    }
 
 //   public void set(MobEntity entityIn, Vector3d pos){

@@ -1,0 +1,4 @@
+Human:#(103,4,31)\nDiedie:
+This message has no meaning.\nHuman:#(113,4,30)\nDiedie:
+
+Hi, I'm Diedie! I'm the Farmer Chief in this village. I'm friendly and hospitable, so if you need help with anything, let me know! I'm always happy to help out. Come back anytime!\n
