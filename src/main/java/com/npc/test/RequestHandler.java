@@ -58,6 +58,7 @@ public class RequestHandler {
             HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();
             String responseString = EntityUtils.toString(entity, "UTF-8");
+            System.out.println(responseString);
 
             return new Gson().fromJson(responseString, OpenAIResponse.class).choices[0].text.replace("\r", " ");
         }

@@ -64,7 +64,6 @@ public class GPdelivery_chat implements Runnable {
                             fileWriter.write(cruuent+",\n");
                             String RespondFormat =  "{\"role\": \"assistant\", \"content\": \"%s\"},\n" ;
                             RespondFormat = String.format(RespondFormat,response.replace("\n",""));
-                            //System.out.println(RespondFormat);
                             fileWriter.write(RespondFormat);
 
                             fileWriter.flush();

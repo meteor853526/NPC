@@ -3,6 +3,9 @@ package com.npc.test.network;
 
 import com.npc.test.NpcTestMod;
 import com.npc.test.network.message.MaidConfigMessage;
+import com.npc.test.passive.NpcEntity;
+import net.minecraft.command.arguments.EntitySelector;
+import net.minecraft.command.arguments.EntitySelectorParser;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -61,8 +64,10 @@ public final class NetworkHandler {
 //                Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
 
-    public static void sendToClientPlayer(Object message, PlayerEntity player) {
-        CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), message);
+    public static void sendToClientPlayer(World world,PlayerEntity player) {
+
+
+        //CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), c);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend) {

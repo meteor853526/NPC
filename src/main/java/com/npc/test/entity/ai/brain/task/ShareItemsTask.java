@@ -7,7 +7,7 @@ import com.npc.test.init.InitEntities;
 import com.npc.test.passive.NpcEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.BrainUtil;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
@@ -21,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 
@@ -31,11 +32,9 @@ import java.util.stream.Collectors;
 
 public class ShareItemsTask extends Task<NpcEntity> {
    private Set<Item> trades = ImmutableSet.of();
-   private EntityType<?> entityType;
 
-   public ShareItemsTask(EntityType<?> entity) {
+   public ShareItemsTask() {
       super(ImmutableMap.of( MemoryModuleType.VISIBLE_LIVING_ENTITIES, MemoryModuleStatus.VALUE_PRESENT, InitEntities.PICKUP.get(),MemoryModuleStatus.VALUE_PRESENT));
-      this.entityType = entity;
    }
 
    protected boolean checkExtraStartConditions(ServerWorld worldIn, NpcEntity owner) {
@@ -51,9 +50,11 @@ public class ShareItemsTask extends Task<NpcEntity> {
    protected void start(ServerWorld worldIn, NpcEntity owner, long gameTimeIn) {
       //NpcEntity NpcEntity = (NpcEntity)entityIn.getBrain().getMemory(MemoryModuleType.INTERACTION_TARGET).get();
       //BrainUtil.lockGazeAndWalkToEachOther(entityIn, NpcEntity, 0.5F);
+      Brain<?> brain = owner.getBrain();
+      brain.setMemory(InitEntities.Farmer_Drop.get(),new BlockPos(7,4,12));
       this.getStatus();
 
-         throwHalfStack(owner, owner.getInventory().removeAllItems(), com.npc.test.passive.NpcEntity.me);
+      throwHalfStack(owner, owner.getInventory().removeAllItems(), com.npc.test.passive.NpcEntity.me);
 
 //      this.trades = figureOutWhatIAmWillingToTrade(entityIn, NpcEntity);
    }
@@ -122,7 +123,7 @@ public class ShareItemsTask extends Task<NpcEntity> {
 
          for(ItemStack itemstack : p_220586_1_) {
             //BrainUtil.throwItem(p_220586_0_, itemstack, p_234476_2_.add(0.0D, 1.0D, 0.0D));
-            Vector3d vector3d = new Vector3d(236,4,127);
+            Vector3d vector3d = new Vector3d(7,4,12);
             BrainUtil.throwItem(p_220586_0_, itemstack, vector3d);
          }
       }

@@ -19,3 +19,5 @@
 {"role": "assistant", "content": "As an AI language model, I cannot remember all the questions you have asked before. Once the conversation is ended, the chat history gets cleared."},
 {"role": "user", "content": "what are the question I asked above?"},
 {"role": "assistant", "content": "You have asked the following questions above:1. 1+1?2. 2+1?3. 4+1?4. 4+4?5. What are the question I asked above?6. what all the question I ever asked before?"},
+{"role": "user", "content": ""},
+{"role": "assistant", "content": "Is there anything else you would like to ask or know? I'm here to help."},

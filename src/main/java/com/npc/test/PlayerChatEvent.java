@@ -5,6 +5,7 @@ import com.npc.test.chat.GPdelivery_chat;
 import com.npc.test.chat.ThreadManager;
 import com.npc.test.chat.delivery_chat;
 import com.npc.test.chat.farmer_chat;
+import com.npc.test.network.NetworkHandler;
 import com.npc.test.passive.DeliveryEntity;
 import com.npc.test.passive.NpcEntity;
 import net.minecraft.util.math.BlockPos;
@@ -82,6 +83,7 @@ public class PlayerChatEvent {
         if(ChatMsg.charAt(0) == '!'){
             DeliveryEntity.taskID = 2;
             NpcEntity.taskID = 2;
+            NetworkHandler.sendToClientPlayer(event.getPlayer().getLevel(),event.getPlayer());
         }
         if(ChatMsg.charAt(0) == '~'){
             lastRequest = System.currentTimeMillis();
@@ -101,6 +103,7 @@ public class PlayerChatEvent {
             setting = settingContent;
             String text = new String(Files.readAllBytes(CharRecordPath), StandardCharsets.UTF_8);
             chatRecord = text;
+            threadManager.execute(new farmer_chat(count++,event,settingContent,chatRecord));
 //            Thread t = new Thread(() -> {
 //                try {
 //

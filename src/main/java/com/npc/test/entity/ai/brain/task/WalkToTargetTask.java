@@ -2,6 +2,7 @@ package com.npc.test.entity.ai.brain.task;
 
 import com.google.common.collect.ImmutableMap;
 import com.npc.test.init.InitEntities;
+import com.npc.test.passive.DeliveryEntity;
 import com.npc.test.passive.NpcEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -61,6 +62,15 @@ public class WalkToTargetTask extends Task<MobEntity> {
          } else {
             brain.eraseMemory(WALK_TARGET);
             if (flag) {
+
+               if(DeliveryEntity.taskID == 3) {
+                  DeliveryEntity.taskID = 1; // walk to start_point then to destination
+               }else if(DeliveryEntity.taskID == 1){
+                  DeliveryEntity.taskID = 2;
+               }else{                        // in destination then drop item
+                  DeliveryEntity.taskID = 0;
+               }
+
                brain.eraseMemory(InitEntities.TASK_ID.get());
                System.out.println(brain.getMemory(InitEntities.TASK_ID.get()) + "????");
                brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
@@ -94,7 +104,7 @@ public class WalkToTargetTask extends Task<MobEntity> {
       entityIn.getBrain().eraseMemory(WALK_TARGET);
       entityIn.getBrain().eraseMemory(MemoryModuleType.PATH);
       //NpcEntity.pos = null;
-      //System.out.println("??????????????????????????????");
+
       this.path = null;
    }
 

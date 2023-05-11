@@ -130,12 +130,15 @@ public class DeliveryEntity<T> extends TameableEntity {
     @Override
     public void tick() {
         super.tick();
-
+        //System.out.println(taskID);
 
         if(taskID == 1){
-            this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
+            this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1)); // prompt(destination)
         }else if (taskID == 2){
             this.getBrain().setMemory(InitEntities.PICKUP.get(),true);
+        }else if (taskID == 3){
+            BlockPos p = new BlockPos(7,4,12);
+            this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(p,1,1)); // destination
         }
 
         //System.out.println(taskID);

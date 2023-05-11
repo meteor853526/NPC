@@ -17,6 +17,7 @@ import net.minecraft.entity.ai.brain.schedule.Schedule;
 import net.minecraft.entity.ai.brain.schedule.ScheduleBuilder;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.IPosWrapper;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -44,6 +45,10 @@ public final class InitEntities {
 
     public static RegistryObject<MemoryModuleType<Boolean>> PICKUP = MEMORY_MODULE_TYPES.register("pick_up", () -> new MemoryModuleType<>(Optional.empty()));
     public static RegistryObject<MemoryModuleType<Boolean>> LOCK = MEMORY_MODULE_TYPES.register("lock", () -> new MemoryModuleType<>(Optional.empty()));
+
+    public static RegistryObject<MemoryModuleType<BlockPos>> Farmer_Drop = MEMORY_MODULE_TYPES.register("farmer_drop", () -> new MemoryModuleType<>(Optional.empty()));
+
+
     public static RegistryObject<MemoryModuleType<Integer>> TASK_ID = MEMORY_MODULE_TYPES.register("task_id", () -> new MemoryModuleType<>(Optional.empty()));
     public static RegistryObject<MemoryModuleType<Boolean>> SERVICE_CHECK = MEMORY_MODULE_TYPES.register("service_check", () -> new MemoryModuleType<>(Optional.empty()));
     public static RegistryObject<SensorType<MaidPickupEntitiesSensor>> MAID_PICKUP_ENTITIES_SENSOR = SENSOR_TYPES.register("maid_pickup_entities", () -> new SensorType<>(MaidPickupEntitiesSensor::new));

@@ -46,6 +46,7 @@ public class MaidConfigMessage {
 
     public static void handle(MaidConfigMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
+        System.out.println();
         if (context.getDirection().getReceptionSide().isServer()) {
             context.enqueueWork(() -> {
                 ServerPlayerEntity sender = context.getSender();
@@ -53,8 +54,10 @@ public class MaidConfigMessage {
                     return;
                 }
                 Entity entity = sender.level.getEntity(message.id);
+                System.out.println(entity.blockPosition().getX()+"sssss");
                 if (entity instanceof NpcEntity && ((NpcEntity) entity).isOwnedBy(sender)) {
                     NpcEntity maid = (NpcEntity) entity;
+
                     //maid.setHomeModeEnable(message.home);
                     maid.setPickup(message.pick);
                     //maid.setRideable(message.ride);

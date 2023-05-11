@@ -35,7 +35,8 @@ public final class DeliveryBrain extends BrainUtil {
                 InitEntities.SERVICE_CHECK.get(),
                 InitEntities.PICKUP.get(),
                 InitEntities.TASK_ID.get(),
-                InitEntities.LOCK.get()
+                InitEntities.LOCK.get(),
+                InitEntities.Farmer_Drop.get()
                 //InitEntities.TARGET_POS.get()
         );
     }

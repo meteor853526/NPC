@@ -12,6 +12,9 @@ import net.minecraftforge.event.ServerChatEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,11 +22,13 @@ public class farmer_chat implements Runnable {
     private int taskId;
     private String setting;
     private String chatRecord;
+    private BlockPos pos = null;
     public static Minecraft mc;
     public static World world;
     public static Long tick;
     public static String currentTime;
     public ServerChatEvent event;
+    public static ThreadManager threadManager = new ThreadManager(new ThreadPoolExecutor(10, 10, 10L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()));
     public farmer_chat(int taskId, ServerChatEvent event, String setting, String chatRecord) {
         this.taskId = taskId;
 
@@ -128,6 +133,8 @@ public class farmer_chat implements Runnable {
 
 
 
+
+
                         System.out.println("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "
                                 + setting +"And this the record we talked before " + chatRecord
                                 + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met ."+ "(it is "+currentTime+" now.)"+"There is the current message: "
@@ -136,7 +143,7 @@ public class farmer_chat implements Runnable {
                         try {
                             FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);         // writing back to the file
 //                            FileWriter fileWriter = new FileWriter("C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);
-                            fileWriter.write("Human:"+ event.getMessage().replace("Hi there! I'm Diedie, the farmer chief. It looks like we haven't talked before. For 1 carrot it costs 3 gold coins, 1 wheat costs 2 gold coins and 1 beetroot is 5 gold coins.", " ") +"\\n");
+                            fileWriter.write("Human:"+ event.getMessage().replace("#", "")+"\\n");
 //                            fileWriter.write("Human:"+ event.getMessage()+"\\n");
                             fileWriter.write("Diedie:"+ response+"\\n");
 //                            fileWriter.write( response +"\\n");
@@ -164,9 +171,15 @@ public class farmer_chat implements Runnable {
                                     arr[count++] = Integer.parseInt(m.group());
                                 }
                             }
-                            NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
-                            NpcEntity.taskID = 1;
-                            System.out.println(NpcEntity.taskID);
+                            //NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
+                            pos = new BlockPos(arr[0],arr[1],arr[2]);
+                            if(response.contains("delivery") || response.contains("deliver") ){
+                                System.out.println("????????????");
+                                threadManager.execute(new distinguish(response.replace("\n",""),event,pos));
+                            }
+
+                            //NpcEntity.taskID = 1;
+                            //System.out.println(NpcEntity.taskID);
                         }
 
                     }

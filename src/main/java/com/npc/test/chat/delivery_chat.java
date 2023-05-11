@@ -93,9 +93,14 @@ public class delivery_chat implements Runnable {
                                     arr[count++] = Integer.parseInt(m.group());
                                 }
                             }
+
+
                             DeliveryEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
                             DeliveryEntity.taskID = 1;
+
+
                             System.out.println(DeliveryEntity.taskID);
+
                         }
 
                 }

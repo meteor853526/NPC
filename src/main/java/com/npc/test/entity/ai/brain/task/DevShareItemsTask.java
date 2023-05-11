@@ -117,7 +117,7 @@ public class DevShareItemsTask extends Task<DeliveryEntity> {
 
          for(ItemStack itemstack : p_220586_1_) {
             //BrainUtil.throwItem(p_220586_0_, itemstack, p_234476_2_.add(0.0D, 1.0D, 0.0D));
-            Vector3d vector3d = new Vector3d(236,4,127);
+            Vector3d vector3d = new Vector3d(DeliveryEntity.pos.getX(),DeliveryEntity.pos.getY(),DeliveryEntity.pos.getZ());
             BrainUtil.throwItem(p_220586_0_, itemstack, vector3d);
          }
       }

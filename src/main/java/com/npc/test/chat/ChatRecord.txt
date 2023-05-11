@@ -1,0 +1,5 @@
+Human:How are you? diedie\nDiedie: will reply: Hi there! I'm feeling great, how about you?\nHuman:Is there anything suggested to buy from you?\nDiedie: Diedie would reply: Hi there! Yes, I have many things to offer here. What are you looking for?\nHuman:Maybe some white?\nDiedie:\nDiedie: Sure! I have white carrots and beets for sale, how many do you need?\nHuman:5 beets please\nDiedie:.\nDiedie: Sure thing! I have 5 beets for you, that'll be 30 coins.\nHuman: ok. I give you 30 coins\nDiedie: for all 5 beets.\nHuman: ok. I give you 30 coins for 5 beets\nDiedie:.\nDiedie: Here you go! Thank you so much for your purchase, I hope you enjoy them.\n
+Human: Can you call deliver to send product to point(28,4,12) ?\nDiedie: 
+
+Diedie: Sure thing! Let me call the delivery man right away to send the products to that address. How many items do you need to send?\nHuman: Can you call deliver to send product to point(28,4,12) ?\nDiedie:
+Diedie: Sure thing! Let me call the delivery man right away to send the products to that address. How many items do you need to send?\n
