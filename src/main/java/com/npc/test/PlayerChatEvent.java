@@ -1,9 +1,11 @@
 package com.npc.test;
 
 
+import com.npc.test.chat.GPdelivery_chat;
 import com.npc.test.chat.ThreadManager;
 import com.npc.test.chat.delivery_chat;
 import com.npc.test.chat.farmer_chat;
+import com.npc.test.passive.DeliveryEntity;
 import com.npc.test.passive.NpcEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.ServerChatEvent;
@@ -75,8 +77,23 @@ public class PlayerChatEvent {
 //        String NpcSettingPath = "C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
         Path CharRecordPath = Paths.get("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt");
         String NpcSettingPath = "C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
+        Path GroupChatRecord = Paths.get("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\GroupChatRecord.txt");
 
-        if(ChatMsg.charAt(0) == '!')NpcEntity.taskID = 2;
+        if(ChatMsg.charAt(0) == '!'){
+            DeliveryEntity.taskID = 2;
+            NpcEntity.taskID = 2;
+        }
+        if(ChatMsg.charAt(0) == '~'){
+            lastRequest = System.currentTimeMillis();
+            File file = new File(NpcSettingPath);
+            String settingContent = FileUtils.readFileToString(file,"UTF-8");
+            setting = settingContent;
+            String text = new String(Files.readAllBytes(GroupChatRecord), StandardCharsets.UTF_8);
+            chatRecord = text;
+            threadManager.execute(new GPdelivery_chat(count++,event,settingContent,chatRecord));
+        }
+
+
         if(ChatMsg.charAt(0) == '#') {
             lastRequest = System.currentTimeMillis();
             File file = new File(NpcSettingPath);
@@ -130,7 +147,7 @@ public class PlayerChatEvent {
 //                }
 //            });
 //            t.start();
-            threadManager.execute(new farmer_chat(count++,event,settingContent,chatRecord));
+
 
 
 //            if(threadManager.getActCount() < 1 ){

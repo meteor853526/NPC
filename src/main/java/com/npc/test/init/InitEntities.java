@@ -43,6 +43,8 @@ public final class InitEntities {
     public static RegistryObject<MemoryModuleType<List<Entity>>> VISIBLE_PICKUP_ENTITIES = MEMORY_MODULE_TYPES.register("visible_pickup_entities", () -> new MemoryModuleType<>(Optional.empty()));
 
     public static RegistryObject<MemoryModuleType<Boolean>> PICKUP = MEMORY_MODULE_TYPES.register("pick_up", () -> new MemoryModuleType<>(Optional.empty()));
+    public static RegistryObject<MemoryModuleType<Boolean>> LOCK = MEMORY_MODULE_TYPES.register("lock", () -> new MemoryModuleType<>(Optional.empty()));
+    public static RegistryObject<MemoryModuleType<Integer>> TASK_ID = MEMORY_MODULE_TYPES.register("task_id", () -> new MemoryModuleType<>(Optional.empty()));
     public static RegistryObject<MemoryModuleType<Boolean>> SERVICE_CHECK = MEMORY_MODULE_TYPES.register("service_check", () -> new MemoryModuleType<>(Optional.empty()));
     public static RegistryObject<SensorType<MaidPickupEntitiesSensor>> MAID_PICKUP_ENTITIES_SENSOR = SENSOR_TYPES.register("maid_pickup_entities", () -> new SensorType<>(MaidPickupEntitiesSensor::new));
     public static RegistryObject<MemoryModuleType<IPosWrapper>> TARGET_POS = MEMORY_MODULE_TYPES.register("target_pos", () -> new MemoryModuleType<>(Optional.empty()));

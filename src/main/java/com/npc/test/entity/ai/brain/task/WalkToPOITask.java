@@ -22,7 +22,7 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class WalkToPOITask extends Task<NpcEntity> {
+public class WalkToPOITask extends Task<MobEntity> {
     private final float speedModifier;
     private final int closeEnoughDistance;
 

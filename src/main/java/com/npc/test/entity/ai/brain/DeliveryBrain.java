@@ -3,8 +3,13 @@ package com.npc.test.entity.ai.brain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import com.npc.test.entity.ai.brain.task.DevShareItemsTask;
+import com.npc.test.entity.ai.brain.task.ShareItemsTask;
 import com.npc.test.entity.ai.brain.task.WalkToTargetTask;
+import com.npc.test.entity.ai.brain.task.devlairTask;
+import com.npc.test.init.InitEntities;
 import com.npc.test.passive.DeliveryEntity;
+import com.npc.test.passive.NpcEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.BrainUtil;
@@ -26,7 +31,11 @@ public final class DeliveryBrain extends BrainUtil {
                 MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
                 MemoryModuleType.WALK_TARGET,
                 MemoryModuleType.ATTACK_TARGET,
-                MemoryModuleType.ATTACK_COOLING_DOWN
+                MemoryModuleType.ATTACK_COOLING_DOWN,
+                InitEntities.SERVICE_CHECK.get(),
+                InitEntities.PICKUP.get(),
+                InitEntities.TASK_ID.get(),
+                InitEntities.LOCK.get()
                 //InitEntities.TARGET_POS.get()
         );
     }
@@ -76,14 +85,16 @@ public final class DeliveryBrain extends BrainUtil {
 //        Pair<Integer, Task<? super EntityMaid>> maidPanic = Pair.of(1, new MaidPanicTask());
 //        Pair<Integer, Task<? super EntityMaid>> maidAwait = Pair.of(1, new MaidAwaitTask());
         Pair<Integer, Task<? super DeliveryEntity>> interactWithDoor = Pair.of(2, new InteractWithDoorTask());
-        Pair<Integer, Task<? super DeliveryEntity>> walkToTarget = Pair.of(2, new WalkToTargetTask());
+        Pair<Integer, Task<? super DeliveryEntity>> walkToTarget = Pair.of(2, new WalkToTargetTask(DeliveryEntity.TYPE));
+        Pair<Integer, Task<? super DeliveryEntity>> ShareItemTask = Pair.of(3, new DevShareItemsTask());
+        Pair<Integer, Task<? super DeliveryEntity>> test = Pair.of(3, new devlairTask());
 //        Pair<Integer, Task<? super EntityMaid>> followOwner = Pair.of(3, new MaidFollowOwnerTask(0.5f, 8, 2));
 //        Pair<Integer, Task<? super EntityMaid>> pickupItem = Pair.of(10, new MaidPickupEntitiesTask(EntityMaid::isPickup, 8, 0.6f));
 //        Pair<Integer, Task<? super EntityMaid>> maidReturnHome = Pair.of(20, new MaidReturnHomeTask(0.5f));
 //        Pair<Integer, Task<? super EntityMaid>> clearSleep = Pair.of(99, new MaidClearSleepTask());
 
         //brain.addActivity(Activity.CORE, ImmutableList.of(swim, look, maidPanic, maidAwait, interactWithDoor, walkToTarget, followOwner, pickupItem, maidReturnHome, clearSleep));
-        brain.addActivity(Activity.CORE, ImmutableList.of(swim, look, interactWithDoor, walkToTarget));
+        brain.addActivity(Activity.CORE, ImmutableList.of(swim, look, interactWithDoor, walkToTarget,ShareItemTask,test));
     }
 
     private static void registerIdleGoals(Brain<DeliveryEntity> brain) {

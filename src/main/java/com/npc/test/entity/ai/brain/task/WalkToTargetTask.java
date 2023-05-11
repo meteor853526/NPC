@@ -1,8 +1,10 @@
 package com.npc.test.entity.ai.brain.task;
 
 import com.google.common.collect.ImmutableMap;
+import com.npc.test.init.InitEntities;
 import com.npc.test.passive.NpcEntity;
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.brain.Brain;
@@ -31,8 +33,12 @@ public class WalkToTargetTask extends Task<MobEntity> {
    private BlockPos lastTargetPos;
    private float speedModifier;
 
-   public WalkToTargetTask() {
+   private EntityType<?> entityType;
+
+
+   public WalkToTargetTask(EntityType<?> entity) {
       this(150, 250);
+      this.entityType = entity;
    }
 
    public WalkToTargetTask(int p_i241908_1_, int p_i241908_2_) {
@@ -40,7 +46,6 @@ public class WalkToTargetTask extends Task<MobEntity> {
    }
 
    protected boolean checkExtraStartConditions(ServerWorld worldIn, MobEntity owner) {
-
       if (this.remainingCooldown > 0) {
          --this.remainingCooldown;
          return false;
@@ -51,14 +56,17 @@ public class WalkToTargetTask extends Task<MobEntity> {
          boolean flag = this.reachedTarget(owner, walktarget);
          if (!flag && this.tryComputePath(owner, walktarget, worldIn.getGameTime())) {
             this.lastTargetPos = walktarget.getTarget().currentBlockPosition();
+            //System.out.println("check");
             return true;
          } else {
             brain.eraseMemory(WALK_TARGET);
             if (flag) {
-
+               brain.eraseMemory(InitEntities.TASK_ID.get());
+               System.out.println(brain.getMemory(InitEntities.TASK_ID.get()) + "????");
                brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+               brain.setMemory(InitEntities.LOCK.get(),true);
                System.out.println(this.getStatus());
-               NpcEntity.taskID = 0;
+
             }
 
             return false;
@@ -86,7 +94,7 @@ public class WalkToTargetTask extends Task<MobEntity> {
       entityIn.getBrain().eraseMemory(WALK_TARGET);
       entityIn.getBrain().eraseMemory(MemoryModuleType.PATH);
       //NpcEntity.pos = null;
-
+      //System.out.println("??????????????????????????????");
       this.path = null;
    }
 

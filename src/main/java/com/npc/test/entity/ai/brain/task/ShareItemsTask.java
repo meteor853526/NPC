@@ -7,6 +7,7 @@ import com.npc.test.init.InitEntities;
 import com.npc.test.passive.NpcEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.brain.BrainUtil;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
@@ -30,9 +31,11 @@ import java.util.stream.Collectors;
 
 public class ShareItemsTask extends Task<NpcEntity> {
    private Set<Item> trades = ImmutableSet.of();
+   private EntityType<?> entityType;
 
-   public ShareItemsTask() {
+   public ShareItemsTask(EntityType<?> entity) {
       super(ImmutableMap.of( MemoryModuleType.VISIBLE_LIVING_ENTITIES, MemoryModuleStatus.VALUE_PRESENT, InitEntities.PICKUP.get(),MemoryModuleStatus.VALUE_PRESENT));
+      this.entityType = entity;
    }
 
    protected boolean checkExtraStartConditions(ServerWorld worldIn, NpcEntity owner) {

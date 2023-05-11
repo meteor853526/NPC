@@ -157,12 +157,17 @@ public class NpcEntity<T> extends TameableEntity{
         //this.getBrain().setMemory(InitEntities.PICKUP.get(),false);
 //        this.getBrain().setMemory(InitEntities.SERVICE_CHECK.get(),true);
 //        this.getBrain().setMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER,me);
-        if(taskID == 1){
+        if(taskID == 1 ){
  //           BrainUtil.setWalkAndLookTargetMemories((LivingEntity) this.getEntity(),pos,1,1);
             this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
-
+            if(this.getBrain().getMemory(InitEntities.LOCK.get()).orElse(false)){
+                this.getBrain().setMemory(InitEntities.TASK_ID.get(),1);
+            }
+            taskID = this.getBrain().getMemory(InitEntities.TASK_ID.get()).orElse(0);
+            System.out.println(taskID);
         }else if (taskID == 2){
             this.getBrain().setMemory(InitEntities.PICKUP.get(),true);
+            this.getBrain().setMemory(InitEntities.TASK_ID.get(),2);
         }
         //testTask();
     }
@@ -184,6 +189,7 @@ public class NpcEntity<T> extends TameableEntity{
 
         if(taskID == 1){
             this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
+            this.getBrain().setMemory(InitEntities.TASK_ID.get(),1);
         }
 
 
@@ -194,6 +200,8 @@ public class NpcEntity<T> extends TameableEntity{
 //        //villagerBrain.addActivity(WalkToTargetTask());
         return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
+
+
 
 
 

@@ -50,7 +50,8 @@ public final class NpcBrain extends BrainUtil {
                 MemoryModuleType.ATTACK_TARGET,
                 MemoryModuleType.ATTACK_COOLING_DOWN,
                 InitEntities.SERVICE_CHECK.get(),
-                InitEntities.PICKUP.get()
+                InitEntities.PICKUP.get(),
+                InitEntities.TASK_ID.get()
                 //InitEntities.TARGET_POS.get()
         );
     }
@@ -101,8 +102,8 @@ public final class NpcBrain extends BrainUtil {
 //        Pair<Integer, Task<? super EntityMaid>> maidPanic = Pair.of(1, new MaidPanicTask());
 //        Pair<Integer, Task<? super EntityMaid>> maidAwait = Pair.of(1, new MaidAwaitTask());
         Pair<Integer, Task<? super NpcEntity>> interactWithDoor = Pair.of(2, new InteractWithDoorTask());
-        Pair<Integer, Task<? super NpcEntity>> walkToTarget = Pair.of(2, new WalkToTargetTask());
-        Pair<Integer, Task<? super NpcEntity>> ShareItemTask = Pair.of(3, new ShareItemsTask());
+        Pair<Integer, Task<? super NpcEntity>> walkToTarget = Pair.of(2, new WalkToTargetTask(NpcEntity.TYPE));
+        Pair<Integer, Task<? super NpcEntity>> ShareItemTask = Pair.of(3, new ShareItemsTask(NpcEntity.TYPE));
         Pair<Integer, Task<? super NpcEntity>> test = Pair.of(3, new devlairTask());
         Pair<Integer, Task<? super NpcEntity>> ItemTask = Pair.of(3, new PickupWantedItemTask<>(1,false,1));
         Pair<Integer, Task<? super NpcEntity>> pickupItem = Pair.of(10, new MaidPickupEntitiesTask(NpcEntity::isPickup, 8, 0.6f));
