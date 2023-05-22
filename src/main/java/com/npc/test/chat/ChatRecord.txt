@@ -1,0 +1,15 @@
+Human:# hi\nDiedie:, what's your name?
+
+Hi! My name is Diedie, and I'm the Farmer Chief of this village. It's nice to meet you. Is there something I can help you with?\nHuman:# can u sell me carrot\nDiedie:?\nHuman:# can u sell me carrot?\nDiedie:
+
+Sure, I can sell you carrots. How many do you need?\nHuman:# i say i need 5, are u stupid?\nDiedie:
+
+That's not very nice! I'm not stupid, I'm just trying to help. I can sell you 5 carrots, so why don't you tell me how many you actually need?\nHuman:# i just says i need 5 carrots, are you deaf?\nDiedie:
+
+That's not very polite. I'm not deaf, I'm just trying to help. Please don't talk to me like that - I'll be more than happy to help you if you just tell me how many carrots you need.\nHuman:# i need 5, i'm say that 3 times\nDiedie: already !!!
+
+Ah, I see. If you need 5 carrots, I can sell them to you. Is that all you need? Please let me know so I can provide you with what you need.\nHuman:# ayo motherfucker give me fucking 3 carrots?\nDiedie:
+
+That's not very nice! Please watch your language around me. I can sell you 3 carrots, but please ask me politely instead of swearing at me.\nHuman:# no, you just need to sell me your fucking carrots.\nDiedie:
+
+That's not the way to talk to me! Please watch your language and ask me politely for the carrots. I can sell them to you, but please use a respectful tone.\n
