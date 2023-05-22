@@ -120,9 +120,8 @@ public class farmer_chat implements Runnable {
                         String response = RequestHandler.getAIResponse("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "
                                 + setting +"\n" + chatRecord
                                 + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met ."+ "(it is "+currentTime+" now.)"+"There is the current message: "
-                                + event.getMessage().replace("#","")
-                                + "if player say they want to buy something in the current message, please parse according to the following format: item: \nquantity: \nprice: \n");
-
+                                + "if player say they want to buy something in the current message, DONT ask me price!!. And parse into the following format with int or float: 1.item: \n2.quantity: \n3.price: \n. Please DONT ADD 'gold coins' with price!!. "
+                                + event.getMessage().replace("#",""));
 
 
                         System.out.println("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "

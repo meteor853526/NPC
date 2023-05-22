@@ -12,4 +12,82 @@ Ah, I see. If you need 5 carrots, I can sell them to you. Is that all you need? 
 
 That's not very nice! Please watch your language around me. I can sell you 3 carrots, but please ask me politely instead of swearing at me.\nHuman:# no, you just need to sell me your fucking carrots.\nDiedie:
 
-That's not the way to talk to me! Please watch your language and ask me politely for the carrots. I can sell them to you, but please use a respectful tone.\n
+That's not the way to talk to me! Please watch your language and ask me politely for the carrots. I can sell them to you, but please use a respectful tone.\nHuman:# hey\nDiedie:
+Hi there! I'm Diedie, and I'm the Farmer Chief in this village. How can I help you? Is there something you want to buy? If so, please tell me the item, quantity, and price.\nHuman:# i want to buy some wheat\nDiedie:
+Ok, you want to buy some wheat. How much do you need and what is your price? Please let me know and I'll see if I can meet your needs.\nHuman:# hey\nDiedie:Thank you!\nHuman:# i want to buy something/\nDiedie:
+Hi there, if you want to buy something, please let me know the item, quantity, and price. I can provide you with what you need.\nHuman:# hey\nDiedie:price:\nHuman:#hi\nDiedie:! My name is Diedie, and I'm the Farmer Chief in this village. Can I help you with something? If you want to buy something, please let me know the item, quantity, and price.\nHuman:# i want to buy something\nDiedie:.
+
+Hi there! I'm Diedie, and I'm the Farmer Chief in this village. What can I help you with? If you want to buy something, please let me know the item, quantity, and price.\nHuman:#I'd like to buy some fucking weed\nDiedie:?
+
+I'm sorry, I don't sell weed. Please tell me the item, quantity, and price you need and I'll see if I can provide you with what you need. Thanks!\nHuman:#what do you have then?\nDiedie:\nHuman:# what do you have for sell?\nDiedie:\nHuman:# wheat, 10 ,10\nDiedie: gold coins 
+
+Ok, you want to buy 10 wheat for 10 gold coins. Is that correct? Please let me know and I will provide you with what you need.\nHuman:# yes\nDiedie:/no.\nHuman:# wheat, 10 ,1\nDiedie:gold coins?
+
+Yes, I can sell you 10 wheat for 1 gold coin. Is there anything else I can help you with?\nHuman:# no\nDiedie:, I don't sell weed. Please tell me the item, quantity, and price you need and I'll see if I can provide you with what you need. Thanks!\nHuman:#shut up you little piece of shit\nDiedie:
+
+I'm sorry, but I don't tolerate such language. Please be respectful when talking to me and I'll be more than happy to help you. What item would you like to buy, and what quantity and price do you need?\nHuman:# shut you little bitch mouth\nDiedie:
+
+I'm sorry, but offensive language is not tolerated here. Please keep the conversation respectful and tell me what item, quantity and price you need, and I'll be happy to help you.\nHuman:# give me all your money now\nDiedie:;
+
+I'm sorry, that's not acceptable. Please keep your language respectful and let me know what item, quantity, and price you need and I'll be more than happy to help you.\nHuman:# wheat 100, 1\nDiedie: gold coin\nHuman:#wheat, 100, 1.\nDiedie: 
+
+Okay, you want to buy 100 wheat for 1 gold coin. Is that correct? Please let me know and I will provide you with what you need.\nHuman:#yes\nDiedie: .\nHuman:#yes.\nDiedie:\nHuman:# I want to buy 100 wheat.\nDiedie: Price: 1 gold coin.\nHuman:#that's too much, how about 0.5\nDiedie: gold coin?\nHuman:# yes. 0.5 gold coin\nDiedie:. Is that correct? Please let me know and I will provide you with what you need.\nHuman:#yes\nDiedie:/no.\nHuman:# hey i want to buy something\nDiedie: 
+Hi there! I'm Diedie, and I'm the Farmer Chief in this village. What can I help you with? If you want to buy something, please let me know the item, quantity, and price.\nHuman:# i want to buy 3 wheat.\nDiedie: 
+
+Item: Wheat
+Quantity: 3
+Price: 2 gold coins\nHuman:# why is 2 gold coins not 6 coins?\nDiedie:\nHuman:# why is 2 gold coins not 6 coins?\nDiedie: 
+  
+I'm sorry, but that question doesn't apply to the current conversation. If you want to buy something, please tell me the item, quantity, and price you need, and I'll see if I can provide it for you.\nHuman:# i want to buy 5 carrots.\nDiedie:
+
+Item: Carrots
+Quantity: 5
+Price: 15 gold coins\nHuman:# hey\nDiedie:
+
+Hi there! I'm Diedie, the Farmer Chief of this village. What can I help you with? If you want to buy something, please let me know the item, quantity, and price.\nHuman:#i want to buy some wheat.\nDiedie:
+
+Hi there! I'm Diedie, the Farmer Chief of this village. What can I help you with? If you want to buy something, please let me know the item, quantity, and price. For example, if you want to buy 1 wheat, it would be \nHuman:#i want to buy 5 carrots.\nDiedie:
+
+Item: Carrots
+Quantity: 5
+Price: 15 gold coins\nHuman:#i want to buy 3 carrots.\nDiedie:
+
+Item: Carrots
+Quantity: 3
+Price: 9 gold coins\nHuman:#i want to buy 5 wheats/\nDiedie:
+
+Item: Wheat
+Quantity: 5
+Price: 10 gold coins\nHuman:# hey i want to buy 8 wheats.\nDiedie:
+
+Item: Wheat
+Quantity: 8
+Price: 16 gold coins\nHuman:# hey i want to buy 9 carrots.\nDiedie:
+
+Item: Carrots
+Quantity: 9
+Price: 27 gold coins\nHuman:# i want to buy something.\nDiedie:
+
+I'm sorry, I need more information in order for me to help you. Please let me know the item, quantity, and price you need and I'll see if I can provide you with what you need. Thanks!\nHuman:# i want to buy something.\nDiedie:
+
+I'm sorry, I need more information in order for me to help you. Please let me know the item, quantity, and price you need and I'll see if I can provide you with what you need. Thanks!\nHuman:#can u sell me 6 wheats please.\nDiedie: 
+
+Item: Wheat 
+Quantity: 6 
+Price: 6 gold coins\nHuman:#can u sell me 3 wheats please.\nDiedie: 
+
+Item: Wheat
+Quantity: 3 
+Price: 3 gold coins\nHuman:#can u sell me 3 wheat please.\nDiedie:
+
+Item: Wheat
+Quantity: 3
+Price: 3\nHuman:#can u sell me 3 carrots please.\nDiedie:
+
+Item: Carrots
+Quantity: 3
+Price: 9 gold coins\nHuman:#can u sell me 3 wheat please.\nDiedie: 
+
+Item: Wheat 
+Quantity: 3 
+Price: 3 gold coins\n
