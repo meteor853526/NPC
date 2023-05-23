@@ -2,7 +2,9 @@ package com.npc.test.chat;
 
 import com.npc.test.PlayerChatEvent;
 import com.npc.test.RequestHandler;
+import com.npc.test.passive.NpcEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ServerChatEvent;
@@ -10,16 +12,23 @@ import net.minecraftforge.event.ServerChatEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class farmer_chat implements Runnable {
     private int taskId;
     private String setting;
     private String chatRecord;
+    private BlockPos pos = null;
     public static Minecraft mc;
     public static World world;
     public static Long tick;
     public static String currentTime;
     public ServerChatEvent event;
+    public static ThreadManager threadManager = new ThreadManager(new ThreadPoolExecutor(10, 10, 10L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()));
     public farmer_chat(int taskId, ServerChatEvent event, String setting, String chatRecord) {
         this.taskId = taskId;
 
@@ -40,7 +49,7 @@ public class farmer_chat implements Runnable {
         System.out.println("Task " + taskId + " is running on thread " + Thread.currentThread().getName());
 
             try {
-                while (true) {
+
 //                    PlayerEntity player = Minecraft.getInstance().player;
                     tick = Minecraft.getInstance().level.getDayTime();
                     System.out.println("TICK:"+tick);
@@ -119,10 +128,11 @@ public class farmer_chat implements Runnable {
                         }
                         String response = RequestHandler.getAIResponse("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "
                                 + setting +"\n" + chatRecord
-                                + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met ."+ "(it is "+currentTime+" now.)"
-                                + "If i say i want to buy something in the current message, parse into the following format:1.item: \n2.quantity: \n3.price: \nBUT you need to strictly observe these two rule: 1.DONT ADD any words in front of the Item please. 2.DONT ADD gold coins after the price please. "
-                                + "There is the current message: "
+                                + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met ."+ "(it is "+currentTime+" now.)"+"There is the current message: "
                                 + event.getMessage().replace("#",""));
+
+
+
 
 
                         System.out.println("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "
@@ -131,9 +141,9 @@ public class farmer_chat implements Runnable {
                                 + event.getMessage().replace("#"," ").replace("'",""));
 
                         try {
-//                            FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);         // writing back to the file
-                            FileWriter fileWriter = new FileWriter("C:\\Users\\User\\IdeaProjects\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);
-                            fileWriter.write("Human:"+ event.getMessage().replace("Hi there! I'm Diedie, the farmer chief. It looks like we haven't talked before. For 1 carrot it costs 3 gold coins, 1 wheat costs 2 gold coins and 1 beetroot is 5 gold coins.", " ") +"\\n");
+                            FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);         // writing back to the file
+//                            FileWriter fileWriter = new FileWriter("C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);
+                            fileWriter.write("Human:"+ event.getMessage().replace("#", "")+"\\n");
 //                            fileWriter.write("Human:"+ event.getMessage()+"\\n");
                             fileWriter.write("Diedie:"+ response+"\\n");
 //                            fileWriter.write( response +"\\n");
@@ -147,9 +157,33 @@ public class farmer_chat implements Runnable {
                         System.out.println(response);
                         PlayerChatEvent.ChatReply = response;
                         event.getPlayer().sendMessage(new StringTextComponent("#:"+response), event.getPlayer().getUUID());
-                        break;
+                        if(!Objects.equals(PlayerChatEvent.ChatMsg, "")){
+                            String regex ="[-]?\\d*";
+                            Pattern p = Pattern.compile(regex);
+                            Matcher m = p.matcher(PlayerChatEvent.ChatMsg);
+                            int[] arr = new int[3];
+                            System.out.println();
+                            //arr[0] = arr[1] = arr[2] = 0;
+                            int count = 0;
+                            while (m.find()) {
+                                if (!"".equals(m.group())){
+                                    System.out.println("come here:"+ m.group());
+                                    arr[count++] = Integer.parseInt(m.group());
+                                }
+                            }
+                            //NpcEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
+                            pos = new BlockPos(arr[0],arr[1],arr[2]);
+                            if(response.contains("delivery") || response.contains("deliver") ){
+                                System.out.println("????????????");
+                                threadManager.execute(new distinguish(response.replace("\n",""),event,pos));
+                            }
+
+                            //NpcEntity.taskID = 1;
+                            //System.out.println(NpcEntity.taskID);
+                        }
+
                     }
-                }
+
                 Thread.sleep(1000);
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);

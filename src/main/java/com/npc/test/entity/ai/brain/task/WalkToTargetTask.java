@@ -1,8 +1,11 @@
 package com.npc.test.entity.ai.brain.task;
 
 import com.google.common.collect.ImmutableMap;
+import com.npc.test.init.InitEntities;
+import com.npc.test.passive.DeliveryEntity;
 import com.npc.test.passive.NpcEntity;
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.brain.Brain;
@@ -31,8 +34,12 @@ public class WalkToTargetTask extends Task<MobEntity> {
    private BlockPos lastTargetPos;
    private float speedModifier;
 
-   public WalkToTargetTask() {
+   private EntityType<?> entityType;
+
+
+   public WalkToTargetTask(EntityType<?> entity) {
       this(150, 250);
+      this.entityType = entity;
    }
 
    public WalkToTargetTask(int p_i241908_1_, int p_i241908_2_) {
@@ -46,14 +53,30 @@ public class WalkToTargetTask extends Task<MobEntity> {
       } else {
          Brain<?> brain = owner.getBrain();
          WalkTarget walktarget = brain.getMemory(WALK_TARGET).get();
+
          boolean flag = this.reachedTarget(owner, walktarget);
          if (!flag && this.tryComputePath(owner, walktarget, worldIn.getGameTime())) {
             this.lastTargetPos = walktarget.getTarget().currentBlockPosition();
+            //System.out.println("check");
             return true;
          } else {
             brain.eraseMemory(WALK_TARGET);
             if (flag) {
+
+               if(DeliveryEntity.taskID == 3) {
+                  DeliveryEntity.taskID = 1; // walk to start_point then to destination
+               }else if(DeliveryEntity.taskID == 1){
+                  DeliveryEntity.taskID = 2;
+               }else{                        // in destination then drop item
+                  DeliveryEntity.taskID = 0;
+               }
+
+               brain.eraseMemory(InitEntities.TASK_ID.get());
+               System.out.println(brain.getMemory(InitEntities.TASK_ID.get()) + "????");
                brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+               brain.setMemory(InitEntities.LOCK.get(),true);
+               System.out.println(this.getStatus());
+
             }
 
             return false;
@@ -80,6 +103,8 @@ public class WalkToTargetTask extends Task<MobEntity> {
       entityIn.getNavigation().stop();
       entityIn.getBrain().eraseMemory(WALK_TARGET);
       entityIn.getBrain().eraseMemory(MemoryModuleType.PATH);
+      //NpcEntity.pos = null;
+
       this.path = null;
    }
 
@@ -87,6 +112,7 @@ public class WalkToTargetTask extends Task<MobEntity> {
 
       entityIn.getBrain().setMemory(MemoryModuleType.PATH, this.path);
       entityIn.getNavigation().moveTo(this.path, (double)this.speedModifier);
+
    }
 
 //   public void set(MobEntity entityIn, Vector3d pos){

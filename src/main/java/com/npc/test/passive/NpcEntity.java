@@ -3,26 +3,46 @@ package com.npc.test.passive;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
 import com.npc.test.entity.ai.brain.NpcBrain;
+import com.npc.test.entity.ai.brain.task.ShareItemsTask;
 import com.npc.test.entity.chatbubble.ChatBubbleManger;
 import com.npc.test.entity.chatbubble.ChatText;
 import com.npc.test.entity.chatbubble.MaidChatBubbles;
 
+import com.npc.test.init.InitEntities;
+import com.npc.test.init.InitItems;
+import com.npc.test.inventory.container.MaidConfigContainer;
+import com.npc.test.inventory.container.MaidMainContainer;
+import com.npc.test.inventory.handler.MaidBackpackHandler;
+import com.npc.test.item.ItemMaidBackpack;
+import com.npc.test.util.ItemsUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.BrainUtil;
+import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.brain.memory.WalkTarget;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.ai.brain.task.WalkToTargetTask;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.item.ExperienceOrbEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -34,12 +54,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.entity.PartEntity;
+import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 
 public class NpcEntity<T> extends TameableEntity{
@@ -49,15 +76,28 @@ public class NpcEntity<T> extends TameableEntity{
     public static long lastRequest = 0;
 
     public static BlockPos pos = null;
+    private int backpackDelay = 0;
+    private final ItemStackHandler maidInv = new MaidBackpackHandler(36);
+    public boolean guiOpening = false;
 
+    public static PlayerEntity me;
+    public static final String BACKPACK_LEVEL_TAG = "MaidBackpackLevel";
+    private static final String PICKUP_TAG = "MaidIsPickup";
+    private static final DataParameter<Integer> DATA_BACKPACK_LEVEL = EntityDataManager.defineId(NpcEntity.class, DataSerializers.INT);
 
-
+    private static final DataParameter<Boolean> DATA_PICKUP = EntityDataManager.defineId(NpcEntity.class, DataSerializers.BOOLEAN);
     private static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(MemoryModuleType.HOME, MemoryModuleType.JOB_SITE, MemoryModuleType.POTENTIAL_JOB_SITE, MemoryModuleType.MEETING_POINT, MemoryModuleType.LIVING_ENTITIES, MemoryModuleType.VISIBLE_LIVING_ENTITIES, MemoryModuleType.VISIBLE_VILLAGER_BABIES, MemoryModuleType.NEAREST_PLAYERS, MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM, MemoryModuleType.WALK_TARGET, MemoryModuleType.LOOK_TARGET, MemoryModuleType.INTERACTION_TARGET, MemoryModuleType.BREED_TARGET, MemoryModuleType.PATH, MemoryModuleType.DOORS_TO_CLOSE, MemoryModuleType.NEAREST_BED, MemoryModuleType.HURT_BY, MemoryModuleType.HURT_BY_ENTITY, MemoryModuleType.NEAREST_HOSTILE, MemoryModuleType.SECONDARY_JOB_SITE, MemoryModuleType.HIDING_PLACE, MemoryModuleType.HEARD_BELL_TIME, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.LAST_SLEPT, MemoryModuleType.LAST_WOKEN, MemoryModuleType.LAST_WORKED_AT_POI, MemoryModuleType.GOLEM_DETECTED_RECENTLY);
     private static final ImmutableList<SensorType<? extends Sensor<? super VillagerEntity>>> SENSOR_TYPES = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES, SensorType.NEAREST_PLAYERS, SensorType.NEAREST_ITEMS, SensorType.NEAREST_BED, SensorType.HURT_BY, SensorType.VILLAGER_HOSTILES, SensorType.VILLAGER_BABIES, SensorType.SECONDARY_POIS, SensorType.GOLEM_DETECTED);
+
     private static final DataParameter<String> DATA_TASK = EntityDataManager.defineId(NpcEntity.class, DataSerializers.STRING);
     private static final DataParameter<MaidChatBubbles> CHAT_BUBBLE = EntityDataManager.defineId(NpcEntity.class, MaidChatBubbles.DATA);
     private static final DataParameter<String> DATA_MODEL_ID = EntityDataManager.defineId(NpcEntity.class, DataSerializers.STRING);
     private static final String DEFAULT_MODEL_ID = "touhou_little_maid:hakurei_reimu";
+
+    private final Inventory inventory = new Inventory(8);
+
+    public static int taskID=0;
+
     public NpcEntity(EntityType<? extends NpcEntity> type, World world) {
         super(type, world);
         ((GroundPathNavigator) this.getNavigation()).setCanOpenDoors(true);
@@ -109,17 +149,31 @@ public class NpcEntity<T> extends TameableEntity{
         this.getBrain().tick((ServerWorld) this.level, this);
         this.level.getProfiler().pop();
     }
+
     @Override
     public void tick() {
         super.tick();
-        if(pos != null){
-
-            BrainUtil.setWalkAndLookTargetMemories((LivingEntity) this.getEntity(),pos,1,1);
+        if(taskID == 1){
             this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
-            //pos = null;
-            //System.out.println(replay);
-
+        }else if (taskID == 2){
+            this.getBrain().setMemory(InitEntities.PICKUP.get(),true);
         }
+        //this.getBrain().setMemory(InitEntities.PICKUP.get(),false);
+//        this.getBrain().setMemory(InitEntities.SERVICE_CHECK.get(),true);
+//        this.getBrain().setMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER,me);
+//        if(taskID == 1 ){
+// //           BrainUtil.setWalkAndLookTargetMemories((LivingEntity) this.getEntity(),pos,1,1);
+//            this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
+//            if(this.getBrain().getMemory(InitEntities.LOCK.get()).orElse(false)){
+//                this.getBrain().setMemory(InitEntities.TASK_ID.get(),1);
+//            }
+//            taskID = this.getBrain().getMemory(InitEntities.TASK_ID.get()).orElse(0);
+//            System.out.println(taskID);
+//        }else if (taskID == 2){
+//            this.getBrain().setMemory(InitEntities.PICKUP.get(),true);
+//            this.getBrain().setMemory(InitEntities.TASK_ID.get(),2);
+//        }
+        //testTask();
     }
     @Override
     public void baseTick() {
@@ -135,14 +189,27 @@ public class NpcEntity<T> extends TameableEntity{
         ChatBubbleManger.tick(this);
     }
 
-    public ActionResultType testTask(Brain<VillagerEntity> villagerBrain,PlayerEntity p_230254_1_, Hand p_230254_2_){
-        //npc.getBrain().setMemory(InitEntities.TARGET_POS.get(), new BlockPosWrapper(pos));
-        //this.moveTo(pos,100,100);
-        villagerBrain.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(pos, 120, 120));
-        new WalkToTargetTask(120,120);
-        //villagerBrain.addActivity(WalkToTargetTask());
+    public ActionResultType testTask(){
+
+        if(taskID == 1){
+            this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
+            this.getBrain().setMemory(InitEntities.TASK_ID.get(),1);
+        }
+
+
+//        //npc.getBrain().setMemory(InitEntities.TARGET_POS.get(), new BlockPosWrapper(pos));
+//        //this.moveTo(pos,100,100);
+//        villagerBrain.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(pos, 120, 120));
+//        new WalkToTargetTask(120,120);
+//        //villagerBrain.addActivity(WalkToTargetTask());
         return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
+
+
+
+
+
+
     @Override
     public ActionResultType mobInteract(PlayerEntity p_230254_1_, Hand p_230254_2_) {
 
@@ -154,6 +221,8 @@ public class NpcEntity<T> extends TameableEntity{
 //            BrainUtil.setWalkAndLookTargetMemories((LivingEntity) this.getEntity(),pos,1,1);
 //            this.getBrain().setMemory(MemoryModuleType.WALK_TARGET,new WalkTarget(pos,1,1));
 //        }
+        openMaidGui(p_230254_1_);
+        me = p_230254_1_;
         if (!this.level.isClientSide()) {
 
 
@@ -190,6 +259,30 @@ public class NpcEntity<T> extends TameableEntity{
     @Override
     protected void pushEntities() {
         super.pushEntities();
+
+        List<Entity> entityList = this.level.getEntities(this,
+                this.getBoundingBox().inflate(0.5, 0, 0.5), this::canPickup);
+        if (!entityList.isEmpty() && this.isAlive()) {
+            for (Entity entityPickup : entityList) {
+                // 如果是物品
+                if (entityPickup instanceof ItemEntity) {
+                    pickupItem((ItemEntity) entityPickup, false);
+
+                }
+//                // 如果是经验
+//                if (entityPickup instanceof ExperienceOrbEntity) {
+//                    pickupXPOrb((ExperienceOrbEntity) entityPickup);
+//                }
+//                // 如果是 P 点
+//                if (entityPickup instanceof EntityPowerPoint) {
+//                    pickupPowerPoint((EntityPowerPoint) entityPickup);
+//                }
+//                // 如果是箭
+//                if (entityPickup instanceof AbstractArrowEntity) {
+//                    pickupArrow((AbstractArrowEntity) entityPickup, false);
+//                }
+            }
+        }
         //
 //        if (this.isPickup() && this.isTame()) {
 //            List<Entity> entityList = this.level.getEntities(this,
@@ -216,6 +309,118 @@ public class NpcEntity<T> extends TameableEntity{
 //            }
 //        }
     }
+    public boolean isPickup() {
+        return this.entityData.get(DATA_PICKUP);
+    }
+
+    public void setPickup(boolean isPickup) {
+        this.entityData.set(DATA_PICKUP, isPickup);
+    }
+    public boolean canPickup(Entity pickupEntity, boolean checkInWater) {
+
+        return taskID != 2;
+    }
+    public boolean canPickup(Entity pickupEntity) {
+
+        return canPickup(pickupEntity, false);
+    }
+    public boolean pickupItem(ItemEntity entityItem, boolean simulate) {
+        ItemStack itemstack = entityItem.getItem();
+        boolean flag = inventory.canAddItem(itemstack);
+        if (!flag) {
+            return false;
+        }
+        //this.setItemSlot(equipmentslottype, itemstack);
+        this.onItemPickup(entityItem);
+        this.take(entityItem, itemstack.getCount());
+        System.out.println(itemstack.getCount());
+        ItemStack itemstack1 = inventory.addItem(itemstack);
+        if (itemstack1.isEmpty()) {
+            entityItem.remove();
+        } else {
+            itemstack.setCount(itemstack1.getCount());
+        }
+        return true;
+
+//        if (!level.isClientSide && entityItem.isAlive() && !entityItem.hasPickUpDelay()) {
+//            // 获取实体的物品堆
+//            ItemStack itemstack = entityItem.getItem();
+//            this.take(entityItem, itemstack.getCount());
+            // 检查物品是否合法
+//            if (!canInsertItem(itemstack)) {
+//                return false;
+//            }
+            // 获取数量，为后面方面用
+//            int count = itemstack.getCount();
+//            itemstack = ItemHandlerHelper.insertItemStacked(getAvailableInv(false), itemstack, simulate);
+//            if (count == itemstack.getCount()) {
+//                return false;
+//            }
+
+//            if (!simulate) {
+//                // 这是向客户端同步数据用的，如果加了这个方法，会有短暂的拾取动画和音效
+//                this.take(entityItem, count - itemstack.getCount());
+//                if (!MinecraftForge.EVENT_BUS.post(new MaidPlaySoundEvent(this))) {
+//                    pickupSoundCount--;
+//                    if (pickupSoundCount == 0) {
+//                        this.playSound(InitSounds.MAID_ITEM_GET.get(), 1, 1);
+//                        pickupSoundCount = 5;
+//                    }
+//                }
+//                // 如果遍历塞完后发现为空了
+//                if (itemstack.isEmpty()) {
+//                    // 清除这个实体
+//                    entityItem.remove();
+//                } else {
+//                    // 将物品数量同步到客户端
+//                    entityItem.setItem(itemstack);
+//                }
+//            }
+//            return true;
+//        }
+//        return false;
+    }
+    public Inventory getInventory() {
+        return this.inventory;
+    }
+
+    public boolean openMaidGui(PlayerEntity player) {
+        return openMaidGui(player, TabIndex.MAIN);
+    }
+
+    public boolean openMaidGui(PlayerEntity player, int tabIndex) {
+        if (player instanceof ServerPlayerEntity && !this.isSleeping()) {
+            this.navigation.stop();
+            NetworkHooks.openGui((ServerPlayerEntity) player, getGuiProvider(tabIndex), (buffer) -> buffer.writeInt(getId()));
+        }
+        return true;
+    }
+
+    private INamedContainerProvider getGuiProvider(int tabIndex) {
+        switch (tabIndex) {
+            case TabIndex.CONFIG:
+                return MaidConfigContainer.create(getId());
+            case TabIndex.MAIN:
+            default:
+                return MaidMainContainer.create(getId());
+        }
+    }
+
+    public boolean backpackHasDelay() {
+        return backpackDelay > 0;
+    }
+
+    public void setBackpackDelay() {
+        backpackDelay = 20;
+    }
+    public static boolean canInsertItem(ItemStack stack) {
+        if (stack.getItem() instanceof BlockItem) {
+            Block block = ((BlockItem) stack.getItem()).getBlock();
+            return !(block instanceof ShulkerBoxBlock);
+        }
+        //return stack.getItem() != InitItems.PHOTO.get();
+        return true;
+    }
     @Override
     public boolean doHurtTarget(Entity entityIn) {
         boolean result = super.doHurtTarget(entityIn);
@@ -235,33 +440,6 @@ public class NpcEntity<T> extends TameableEntity{
         return super.hurt(source, amount);
     }
 
-//    @Override
-//    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
-//        if (!this.isInvulnerableTo(damageSrc)) {
-//            MaidHurtEvent maidHurtEvent = new MaidHurtEvent(this, damageSrc, damageAmount);
-//            damageAmount = MinecraftForge.EVENT_BUS.post(maidHurtEvent) ? 0 : maidHurtEvent.getAmount();
-//            damageAmount = ForgeHooks.onLivingHurt(this, damageSrc, damageAmount);
-//            if (damageAmount > 0) {
-//                damageAmount = this.getDamageAfterArmorAbsorb(damageSrc, damageAmount);
-//                damageAmount = this.getDamageAfterMagicAbsorb(damageSrc, damageAmount);
-//                float damageAfterAbsorption = Math.max(damageAmount - this.getAbsorptionAmount(), 0);
-//                this.setAbsorptionAmount(this.getAbsorptionAmount() - (damageAmount - damageAfterAbsorption));
-//                float damageDealtAbsorbed = damageAmount - damageAfterAbsorption;
-//                if (0 < damageDealtAbsorbed && damageDealtAbsorbed < (Float.MAX_VALUE / 10) && damageSrc.getEntity() instanceof ServerPlayerEntity) {
-//                    ((ServerPlayerEntity) damageSrc.getEntity()).awardStat(Stats.DAMAGE_DEALT_ABSORBED, Math.round(damageDealtAbsorbed * 10));
-//                }
-//                MaidDamageEvent maidDamageEvent = new MaidDamageEvent(this, damageSrc, damageAfterAbsorption);
-//                damageAfterAbsorption = MinecraftForge.EVENT_BUS.post(maidDamageEvent) ? 0 : maidDamageEvent.getAmount();
-//                damageAfterAbsorption = ForgeHooks.onLivingDamage(this, damageSrc, damageAfterAbsorption);
-//                if (damageAfterAbsorption != 0) {
-//                    float health = this.getHealth();
-//                    this.getCombatTracker().recordDamage(damageSrc, health, damageAfterAbsorption);
-//                    this.setHealth(health - damageAfterAbsorption);
-//                    this.setAbsorptionAmount(this.getAbsorptionAmount() - damageAfterAbsorption);
-//                }
-//            }
-//        }
-//    }
 
     @Override
     public void die(DamageSource cause) {
@@ -349,7 +527,7 @@ public class NpcEntity<T> extends TameableEntity{
             this.entityData.define(DATA_MODEL_ID, DEFAULT_MODEL_ID);
 //        this.entityData.define(DATA_TASK, TaskIdle.UID.toString());
 //        this.entityData.define(DATA_BEGGING, false);
-//        this.entityData.define(DATA_PICKUP, true);
+          this.entityData.define(DATA_PICKUP, true);
 //        this.entityData.define(DATA_HOME_MODE, false);
 //        this.entityData.define(DATA_RIDEABLE, true);
 //        this.entityData.define(DATA_INVULNERABLE, false);
@@ -365,6 +543,78 @@ public class NpcEntity<T> extends TameableEntity{
 //        this.entityData.define(RESTRICT_RADIUS, MaidConfig.MAID_HOME_RANGE.get().floatValue());
         this.entityData.define(CHAT_BUBBLE, MaidChatBubbles.DEFAULT);
     }
+    @Override
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
+//        if (compound.contains(MODEL_ID_TAG, Constants.NBT.TAG_STRING)) {
+//            setModelId(compound.getString(MODEL_ID_TAG));
+//        }
+//        if (compound.contains(TASK_TAG, Constants.NBT.TAG_STRING)) {
+//            ResourceLocation uid = new ResourceLocation(compound.getString(TASK_TAG));
+//            IMaidTask task = TaskManager.findTask(uid).orElse(TaskManager.getIdleTask());
+//            setTask(task);
+//        }
+        if (compound.contains(PICKUP_TAG, Constants.NBT.TAG_BYTE)) {
+            setPickup(compound.getBoolean(PICKUP_TAG));
+        }
+//        if (compound.contains(HOME_TAG, Constants.NBT.TAG_BYTE)) {
+//            setHomeModeEnable(compound.getBoolean(HOME_TAG));
+//        }
+//        if (compound.contains(RIDEABLE_TAG, Constants.NBT.TAG_BYTE)) {
+//            setRideable(compound.getBoolean(RIDEABLE_TAG));
+//        }
+//        if (compound.contains(BACKPACK_LEVEL_TAG, Constants.NBT.TAG_INT)) {
+//            setBackpackLevel(compound.getInt(BACKPACK_LEVEL_TAG));
+//        }
+//        if (compound.contains(MAID_INVENTORY_TAG, Constants.NBT.TAG_COMPOUND)) {
+//            maidInv.deserializeNBT(compound.getCompound(MAID_INVENTORY_TAG));
+//        }
+//        if (compound.contains(MAID_BAUBLE_INVENTORY_TAG, Constants.NBT.TAG_COMPOUND)) {
+//            maidBauble.deserializeNBT(compound.getCompound(MAID_BAUBLE_INVENTORY_TAG));
+//        }
+//        if (compound.contains(STRUCK_BY_LIGHTNING_TAG, Constants.NBT.TAG_BYTE)) {
+//            setStruckByLightning(compound.getBoolean(STRUCK_BY_LIGHTNING_TAG));
+//        }
+//        if (compound.contains(INVULNERABLE_TAG, Constants.NBT.TAG_BYTE)) {
+//            setEntityInvulnerable(compound.getBoolean(INVULNERABLE_TAG));
+//        }
+//        if (compound.contains(HUNGER_TAG, Constants.NBT.TAG_INT)) {
+//            setHunger(compound.getInt(HUNGER_TAG));
+//        }
+//        if (compound.contains(FAVORABILITY_TAG, Constants.NBT.TAG_INT)) {
+//            setFavorability(compound.getInt(FAVORABILITY_TAG));
+//        }
+//        if (compound.contains(EXPERIENCE_TAG, Constants.NBT.TAG_INT)) {
+//            setExperience(compound.getInt(EXPERIENCE_TAG));
+//        }
+//        if (compound.contains(SCHEDULE_MODE_TAG, Constants.NBT.TAG_STRING)) {
+//            setSchedule(MaidSchedule.valueOf(compound.getString(SCHEDULE_MODE_TAG)));
+//        }
+//        if (compound.contains(RESTRICT_CENTER_TAG, Constants.NBT.TAG_COMPOUND)) {
+//            setRestrictCenter(NBTUtil.readBlockPos(compound.getCompound(RESTRICT_CENTER_TAG)));
+//        }
+    }
+    @Override
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
+//        compound.putString(MODEL_ID_TAG, getModelId());
+//        compound.putString(TASK_TAG, getTask().getUid().toString());
+//        compound.putBoolean(PICKUP_TAG, isPickup());
+//        compound.putBoolean(HOME_TAG, isHomeModeEnable());
+//        compound.putBoolean(RIDEABLE_TAG, isRideable());
+//        compound.putInt(BACKPACK_LEVEL_TAG, getBackpackLevel());
+//        compound.put(MAID_INVENTORY_TAG, maidInv.serializeNBT());
+//        compound.put(MAID_BAUBLE_INVENTORY_TAG, maidBauble.serializeNBT());
+//        compound.putBoolean(STRUCK_BY_LIGHTNING_TAG, isStruckByLightning());
+//        compound.putBoolean(INVULNERABLE_TAG, getIsInvulnerable());
+//        compound.putInt(HUNGER_TAG, getHunger());
+//        compound.putInt(FAVORABILITY_TAG, getFavorability());
+//        compound.putInt(EXPERIENCE_TAG, getExperience());
+//        compound.putString(SCHEDULE_MODE_TAG, getSchedule().name());
+//        compound.put(RESTRICT_CENTER_TAG, NBTUtil.writeBlockPos(getRestrictCenter()));
+    }
+
+
     public void setModelId(String modelId) {
         this.entityData.set(DATA_MODEL_ID, modelId);
     }
