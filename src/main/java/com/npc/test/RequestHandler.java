@@ -18,10 +18,10 @@ public class RequestHandler {
 
     public boolean enabled = true;
     public String apiKey = "";
-    public String model = "gpt-3.5-turbo";
+    public String model = "text-davinci-003";
     public float temperature = 0.6f;
     private static class OpenAIRequest {
-        String model = "gpt-3.5-turbo";
+        String model = "text-davinci-003";
         String stop = "\"";
         String prompt = "hi";
         float temperature = 0.9f;
@@ -48,7 +48,7 @@ public class RequestHandler {
         if (prompt.length() > 4096) prompt = prompt.substring(prompt.length() - 4096);
         //AIMobsMod.LOGGER.info("Prompt: " + prompt);
 
-        OpenAIRequest openAIRequest = new OpenAIRequest(prompt, "gpt-3.5-turbo", 0.9f);
+        OpenAIRequest openAIRequest = new OpenAIRequest(prompt, "text-davinci-003", 0.9f);
         String data = new Gson().toJson(openAIRequest);
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
