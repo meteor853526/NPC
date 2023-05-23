@@ -119,8 +119,9 @@ public class farmer_chat implements Runnable {
                         }
                         String response = RequestHandler.getAIResponse("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "
                                 + setting +"\n" + chatRecord
-                                + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met ."+ "(it is "+currentTime+" now.)"+"There is the current message: "
-                                + "if player say they want to buy something in the current message, DONT ask me price!!. And parse into the following format with int or float: 1.item: \n2.quantity: \n3.price: \n. Please DONT ADD 'gold coins' with price!!. "
+                                + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met ."+ "(it is "+currentTime+" now.)"
+                                + "If i say i want to buy something in the current message, parse into the following format:1.item: \n2.quantity: \n3.price: \nBUT you need to strictly observe these two rule: 1.DONT ADD any words in front of the Item please. 2.DONT ADD gold coins after the price please. "
+                                + "There is the current message: "
                                 + event.getMessage().replace("#",""));
 
 
