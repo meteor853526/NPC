@@ -8,7 +8,6 @@ import com.npc.test.chat.farmer_chat;
 import com.npc.test.network.NetworkHandler;
 import com.npc.test.passive.DeliveryEntity;
 import com.npc.test.passive.NpcEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,12 +20,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 @Mod.EventBusSubscriber(modid = NpcTestMod.MOD_ID)
@@ -76,9 +72,9 @@ public class PlayerChatEvent {
 
 //        Path CharRecordPath = Paths.get("C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt");
 //        String NpcSettingPath = "C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
-        Path CharRecordPath = Paths.get("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt");
-        String NpcSettingPath = "C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
-        Path GroupChatRecord = Paths.get("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\GroupChatRecord.txt");
+        Path CharRecordPath = Paths.get("C:\\Users\\User\\IdeaProjects\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt");
+        String NpcSettingPath = "C:\\Users\\User\\IdeaProjects\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\NpcSetting.json";
+        Path GroupChatRecord = Paths.get("C:\\Users\\User\\IdeaProjects\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\GroupChatRecord.txt");
 
         if(ChatMsg.charAt(0) == '!'){
             DeliveryEntity.taskID = 2;

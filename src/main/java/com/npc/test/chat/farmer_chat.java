@@ -141,7 +141,7 @@ public class farmer_chat implements Runnable {
                                 + event.getMessage().replace("#"," ").replace("'",""));
 
                         try {
-                            FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);         // writing back to the file
+                            FileWriter fileWriter = new FileWriter("C:\\Users\\User\\IdeaProjects\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);         // writing back to the file
 //                            FileWriter fileWriter = new FileWriter("C:\\Users\\lili\\Desktop\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);
                             fileWriter.write("Human:"+ event.getMessage().replace("#", "")+"\\n");
 //                            fileWriter.write("Human:"+ event.getMessage()+"\\n");

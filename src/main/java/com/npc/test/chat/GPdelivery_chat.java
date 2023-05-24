@@ -60,7 +60,7 @@ public class GPdelivery_chat implements Runnable {
 
                         String response = TurboRequestHandler.getAIResponse(cruuent);
                         try {
-                            FileWriter fileWriter = new FileWriter("C:\\Users\\Dingo\\Documents\\GitHub\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\GroupChatRecord.txt");         // writing back to the file
+                            FileWriter fileWriter = new FileWriter("C:\\Users\\User\\IdeaProjects\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\GroupChatRecord.txt");         // writing back to the file
                             fileWriter.write(cruuent+",\n");
                             String RespondFormat =  "{\"role\": \"assistant\", \"content\": \"%s\"},\n" ;
                             RespondFormat = String.format(RespondFormat,response.replace("\n",""));

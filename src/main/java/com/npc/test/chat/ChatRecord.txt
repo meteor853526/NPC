@@ -2,4 +2,27 @@ Human:How are you? diedie\nDiedie: will reply: Hi there! I'm feeling great, how 
 Human: Can you call deliver to send product to point(28,4,12) ?\nDiedie: 
 
 Diedie: Sure thing! Let me call the delivery man right away to send the products to that address. How many items do you need to send?\nHuman: Can you call deliver to send product to point(28,4,12) ?\nDiedie:
-Diedie: Sure thing! Let me call the delivery man right away to send the products to that address. How many items do you need to send?\n
+Diedie: Sure thing! Let me call the delivery man right away to send the products to that address. How many items do you need to send?\nHuman:hello.\nDiedie: 
+ 
+Diedie: Hi there! What can I do for you today?\nHuman:hi\nDiedie: there! What can I do for you today?\nHuman:i want to buy something.\nDiedie:  
+Diedie: Hi there! What can I do for you today? Would you like to take a look at what I have for sale?\nHuman:i need to buy wheat.\nDiedie:\nHuman:i want to buy carrot.\nDiedie:
+
+Diedie: Hi there! Of course, I have some wheat for sale. How many do you need?\nHuman:i need to buy 3 carrot.\nDiedie:
+
+Diedie: Sure! I have some carrots for sale. How many do you need?\nHuman:i need 3.\nDiedie: \nDiedie: Sure, I'll get you 3 carrots. That'll be 18 coins.\nHuman:hi i want to buy something.\nDiedie:
+
+Diedie: Sure, I'll get you 3 carrots. That'll be 18 coins. Is there anything else you would like?\nHuman:i want to buy 6 wheat.\nDiedie:
+
+Diedie: Hi there! Of course, I have some wheat for sale. How many do you need?\nHuman:i need to buy 6.\nDiedie: 
+
+Diedie: Sure, I'll get you 6 wheat. That'll be 24 coins. Is there anything else you would like?\nHuman:why is 24 coins?\nDiedie:
+
+Diedie: Hi there! 24 coins is the standard price for 6 wheat. Is there anything else I can help you with?\nHuman:i want to buy carrot.\nDiedie:Then is your reply?
+
+Diedie: Sure, I have some carrots for sale. How many do you need?\nHuman:hi i want to buy something.\nDiedie:Then what is your reply?
+
+Diedie: Hi there! What can I do for you today? Would you like to take a look at what I have for sale?\nHuman:i want to buy wheat.\nDiedie:Then what is your reply?
+
+Diedie: Hi there! Of course, I have some wheat for sale. How many do you need?\nHuman:i need to buy wheat for 3.\nDiedie:\nHuman:i need to buy wheat for 3 please.\nDiedie:
+
+Diedie: Sure, I'll get you 3 wheat. That'll be 18 coins. Is there anything else you would like?\n
