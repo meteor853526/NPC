@@ -11,6 +11,9 @@ import net.minecraftforge.event.ServerChatEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,8 +22,10 @@ public class GPdelivery_chat implements Runnable {
 
     private String setting;
     private String chatRecord;
+    private BlockPos pos = null;
     public static String followmsg = null;
     public ServerChatEvent event;
+    public static ThreadManager threadManager = new ThreadManager(new ThreadPoolExecutor(10, 10, 10L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()));
     public GPdelivery_chat(int taskId, ServerChatEvent event, String setting, String chatRecord) {
         this.taskId = taskId;
 
@@ -71,6 +76,7 @@ public class GPdelivery_chat implements Runnable {
                             e.printStackTrace();
                         }
 
+
                         PlayerChatEvent.ChatReply = response;
                         event.getPlayer().sendMessage(new StringTextComponent("~"+response), event.getPlayer().getUUID());
 
@@ -89,6 +95,14 @@ public class GPdelivery_chat implements Runnable {
                                 }
                             }
                             DeliveryEntity.pos = new BlockPos(arr[0],arr[1],arr[2]);
+                            if(response.contains("delivery") || response.contains("deliver") ){
+                                threadManager.execute(new distinguish(response.replace("\n",""),event,DeliveryEntity.pos));
+                            }
+
+                            if(response.contains("Item:") || response.contains("Amount:") || response.contains("Price:")){
+                                threadManager.execute(new ConnectGUI(response.replace("\n",""),event, chatRecord));
+                            }
+
                             DeliveryEntity.taskID = 1;
                             System.out.println(DeliveryEntity.taskID);
                         }

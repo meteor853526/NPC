@@ -89,6 +89,8 @@ public class PlayerChatEvent {
             String text = new String(Files.readAllBytes(GroupChatRecord), StandardCharsets.UTF_8);
             chatRecord = text;
             threadManager.execute(new GPdelivery_chat(count++,event,settingContent,chatRecord));
+            //threadManager.execute(new farmer_chat(count++,event,settingContent,chatRecord));
+
         }
 
 

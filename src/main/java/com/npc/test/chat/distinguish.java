@@ -50,17 +50,17 @@ public class distinguish implements Runnable {
                             "{\"role\": \"system\", \"content\": \"Determine whether the following sentence needs a delivery person. If it need ,reply yes,otherwise no\"}," +
                             "{\"role\": \"user\", \"content\": \"%s\"}\n"
                             ;
-                    System.out.println(format);
+                    //System.out.println(format);
 
                     String cruuent = String.format(format,response.replace("~",""));
-
+                    //System.out.println(cruuent);
                     String response = TurboRequestHandler.getAIResponse(cruuent);
                     if(response.contains("yes") || response.contains("Yes") || response.contains("YES")){
                         DeliveryEntity.pos = pos;
 
                         DeliveryEntity.taskID = 3; // (7,4,12)
                         NpcEntity.taskID = 2;
-                        System.out.println("???????????????");
+                        //System.out.println("???????????????");
                     }
                     System.out.println("check" + response);
 

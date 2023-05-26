@@ -129,7 +129,7 @@ public class farmer_chat implements Runnable {
                         String response = RequestHandler.getAIResponse("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "
                                 + setting +"\n" + chatRecord
                                 + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met ."+ "(it is "+currentTime+" now.)"+"There is the current message: "
-                                + event.getMessage().replace("#",""));
+                                + event.getMessage().replace("~",""));
 
 
 
@@ -138,7 +138,7 @@ public class farmer_chat implements Runnable {
                         System.out.println("Your reply need to below 50 words !!!!. You are a Non-Player Character(NPC) and your name is diedie and your duty is a farmer and sell some product to player in minecraft !!! .  Then is your character setting "
                                 + setting +"And this the record we talked before " + chatRecord
                                 + "If record show something which mean dont say hi again and DONT introduce yourself again and DONT say the setting! If record show nothing which mean this is the first time we met ."+ "(it is "+currentTime+" now.)"+"There is the current message: "
-                                + event.getMessage().replace("#"," ").replace("'",""));
+                                + event.getMessage().replace("~"," ").replace("'",""));
 
                         try {
                             FileWriter fileWriter = new FileWriter("C:\\Users\\User\\IdeaProjects\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\ChatRecord.txt",true);         // writing back to the file
