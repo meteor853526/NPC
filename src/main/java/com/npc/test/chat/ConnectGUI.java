@@ -2,11 +2,12 @@ package com.npc.test.chat;
 
 import com.npc.test.TurboRequestHandler;
 import com.npc.test.passive.NpcEntity;
+import com.npc.test.trade.OpenGuI;
 import net.minecraftforge.event.ServerChatEvent;
+
+import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import java.io.IOException;
 
 public class ConnectGUI implements Runnable {
 
@@ -40,7 +41,8 @@ public class ConnectGUI implements Runnable {
             String current = chat_Record + String.format(format,response.replace("~",""));
             //String response = TurboRequestHandler.getAIResponse(current);
             //String pattern = "\\s*1\\.\\s*Item:[\\s\\S]*?2\\.\\s*Amount:\\s*(.*?)\\s*3\\.\\s*Price:\\s*([\\d.]+)";
-            String pattern = "Item:\\s*(.*?),\\s*Amount:\\s*(\\d+),\\s*Price:\\s*(\\d+)\\s*.*";
+            //String pattern = "Item:\\s*(.*?),\\s*Amount:\\s*(\\d+),\\s*Price:\\s*(\\d+)\\s*.*";
+            String pattern = "(?i)Item:\\s*([\\p{L}0-9\\s]+),\\s*Amount:\\s*(\\d+),\\s*Price:\\s*(\\d+).*";
 
 
             System.out.println("This is " + current);
@@ -89,6 +91,10 @@ public class ConnectGUI implements Runnable {
             System.out.println(amount);
             System.out.println(price);
 
+            FileWriter fw = new FileWriter("C:\\Users\\User\\IdeaProjects\\NPC\\src\\main\\java\\com\\npc\\test\\chat\\GUI_Value.txt");
+            fw.write(item + "," + amount);
+            fw.flush();
+            fw.close();
             //if(response.contains("")){
 
              //   NpcEntity.taskID = 2;
@@ -98,6 +104,8 @@ public class ConnectGUI implements Runnable {
 
             Thread.sleep(1000);
         } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -25,7 +25,7 @@ public class OpenGuiCommand {
       DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
         try {
 			OpenGuI.openGUI(source.getPlayerOrException());
-		} catch (CommandSyntaxException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
       });
