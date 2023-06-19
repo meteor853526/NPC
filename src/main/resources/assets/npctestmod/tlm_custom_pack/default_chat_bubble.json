@@ -1,0 +1,66 @@
+{
+  "bg": "npctestmod:textures/chat_bubble/bg/default1.png",
+  "text": {
+    "main": {
+      "idle": [
+        "%npctestmod:textures/chat_bubble/emoji/idle1.png%",
+        "%npctestmod:textures/chat_bubble/emoji/idle2.png%",
+        "%npctestmod:textures/chat_bubble/emoji/idle3.png%",
+        "%npctestmod:textures/chat_bubble/emoji/idle4.png%",
+        "%npctestmod:textures/chat_bubble/emoji/idle5.png%",
+        "^_^",
+        "(╬ Ò ‸ Ó)",
+        "(≧▽≦)",
+        "(⁎˃ᆺ˂)"
+      ],
+      "sleep": [
+        "%npctestmod:textures/chat_bubble/emoji/sleep1.png%"
+      ],
+      "work": [
+        "%npctestmod:textures/chat_bubble/emoji/work1.png%",
+        "%npctestmod:textures/chat_bubble/emoji/work2.png%",
+        "%npctestmod:textures/chat_bubble/emoji/work3.png%",
+        "%npctestmod:textures/chat_bubble/emoji/work4.png%",
+        "( ≧Д≦)",
+        "(눈_눈)",
+        "〒.〒",
+        "(☉_☉)"
+      ]
+    },
+    "special": {
+      "morning": [
+        "{chat_bubble.npctestmod.morning.1}"
+      ],
+      "night": [
+        "{chat_bubble.npctestmod.night.1}"
+      ],
+      "hot": [
+        "%npctestmod:textures/chat_bubble/emoji/rain1.png%",
+        "{chat_bubble.npctestmod.hot.1}"
+      ],
+      "cold": [
+        "{chat_bubble.npctestmod.cold.1}"
+      ],
+      "rain": [
+        "%npctestmod:textures/chat_bubble/emoji/rain1.png%",
+        "{chat_bubble.npctestmod.rain.1}"
+      ],
+      "snow": [
+        "{chat_bubble.npctestmod.snow.1}"
+      ],
+      "hurt": [
+        "{chat_bubble.npctestmod.hurt.1}",
+        "˃ʍ˂",
+        "✖‿✖"
+      ],
+      "beg": [
+        "(*╹▽╹*)"
+      ]
+    },
+    "other": {
+      "mute": [
+        "%npctestmod:textures/chat_bubble/emoji/mute1.png%"
+      ]
+    }
+  }
+}
